@@ -1,0 +1,6 @@
+enter haskell compile enviroment:
+	type 'ghci'
+load written script module: 
+	:load [module name]
+then you can call the function/module name whenever you want to use the function
+haskell will return the function value after it eval recursively
