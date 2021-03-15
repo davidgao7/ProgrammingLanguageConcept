@@ -62,7 +62,7 @@ function doSingleRotation(maze, singleMove, player) {
 
     var result = new Array(maze[0].length);
     // copy the origin maze first
-    for (var r = 0; r < maze.length; r++) {
+    for (var r = 0; r < maze[0].length; r++) {
         result[r] = new Array(maze.length);
     }
 
@@ -95,17 +95,22 @@ function doSingleRotation(maze, singleMove, player) {
 
                     if (maze[i][j] === 'x' || maze[i][j] === '-' || maze[i][j] === 'g') {
                         // the piece other than player stays fixed but relative index change
-                        var xRotate = maze[i].length - 1 - j;
-                        console.log("initial index : %s result index: %s", i + " " + j, xRotate + " " + j);
-                        result[xRotate][i] = maze[i][j];
-                    } else if (maze[i][j] === player) {
+                        // console.log("initial index : %s result index: %s peg:%s", i + " " + j, maze[i].length - 1 - j + " " + i,maze[i][j]);
+                        result[maze[i].length - 1 - j][i] = maze[i][j];
+                    } else if (maze[i][j] === player + '') {
+
+                        // console.log("player initial index: %s", i + " " + j);
+
                         // if there's no x, can move
-                        for (let k = 0; k < j; k++) {
-                            if (maze[i][k] === 'x') {
-                                result[i][k + 1] = player;
-                                result[i][j] = '-';
+
+                        for (let k = j - 1; k > 0; k--) {
+
+                            if (maze[i][k] === 'x') {//block in the way
+                                // console.log("player index after move: %s", maze[i].length - 1 - k - 1 + " " + i);
+                                result[maze[i].length - 1 - k - 1][i] = player + '';
                             }
                         }
+                        // console.log("==============out of for loop=============")
                     }
                 }
             }
