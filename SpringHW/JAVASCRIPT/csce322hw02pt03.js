@@ -5,87 +5,71 @@ module.exports = {
 var helpers = require('./helpers');
 
 function manyPlayersManyRotations(maze) {
-
+    // TODO: IMPORTANT:gravity affects everyone
     function whatever(moves) {
-        var numberPlayers = helpers.findNumberPlayers(maze);
         var result = maze;
-        var player = 1;//start from the first player
+
+        if (!helpers.findgoal(result)) {//goal has reached
+            return result;
+        }
 
         for (var moveIndex = 0; moveIndex < moves.length; moveIndex++) {
 
-            var M = result.length;
-            var N = result[0].length;
+            const M = result.length;
+            const N = result[0].length;
 
-            if (player > numberPlayers) {
-                player = 1;
-            }
             var move = moves[moveIndex]
             console.log("maze: ");
             helpers.printMaze(result);
-            console.log("player: " + player)
+
             console.log("move: " + move)
-            //=====================//
+            console.log("========================")
+
             switch (move) {
 
                 case 'c':
-                    const Cresult = Array.from(Array(result[0].length), () => new Array(result.length).fill('-'));
-
-                    let playerX = 0;
-                    let playerY = 0;
-                    var playerMoved = new Set([]);
-
-                    for (let i = 0; i < result.length; i++) {
-                        for (let j = 0; j < result[i].length; j++) {
-                            // other player will act as wall
-
-                            if (result[i][j] === 'x' || result[i][j] === '-' || result[i][j] === 'g' || !helpers.iscurrentPlayer(result[i][j],player)) {
-                                //非此player的情况
-                                var Y = result.length - 1 - i;
-                                if (playerMoved.has(player) && Cresult[j][Y] === player.toString()) {//has move to right position, not touch
-                                } else {
-                                    var stuffin = result[i][j];
-
-                                    Cresult[j][Y] = stuffin;
-
-                                }
+                    const Cresult = Array.from(Array(N), () => new Array(M).fill('-'));
 
 
-                            } else if (result[i][j] === player.toString()) {
+                    for (let i = 0; i < M; i++) {
+                        for (let j = 0; j < N; j++) {
+                            // other player will act as wall, but every player will effect by gravity for
+                            // each move
 
-                                var needbreak = false;
-                                for (let k = j + 1; k < result[i].length; k++) {
+                            if (result[i][j] === 'x' || result[i][j] === '-' || result[i][j] === 'g') {
 
-                                    if (result[i][k] === 'g') {
+                                var Y = M - 1 - i;
+
+                                Cresult[j][Y] = result[i][j];
+
+
+                            } else {
+                                // every player move together
+                                //whenever see a player
+                                let playerX = 0;
+                                let playerY = 0;
+                                var Cneedbreak = false;
+
+                                for (let k = j + 1; k < N; k++) {
+
+                                    if (result[i][k] === 'g' && !Cneedbreak) {//any of the player reach the goal...
 
                                         playerX = k;
-                                        playerY = result.length - 1 - i;
-                                        needbreak = true;
+                                        playerY = M - 1 - i;
+                                        Cneedbreak = true;
                                     }
 
-                                    var isInt = helpers.isInteger(result[i][k]);
-
-                                    if ((result[i][k] === 'x' || isInt) && !needbreak) {
-
-                                        playerX = k - 1;
-                                        playerY = result.length - 1 - i;
-                                        if (playerX > N || playerY > M || playerX < 0 || playerY < 0) {
-                                            // console.log("player index out of bound! "+ playerX + " " + playerY)
-                                        }
-                                        needbreak = true;
+                                    if (result[i][k] !== '-' && !Cneedbreak) {
+                                        // TODO:解决同时贴着下落
+                                        playerX = k-1;
+                                        playerY = M - 1 - i;
+                                        Cneedbreak = true;
+                                        result[i - 1][k] = result[i][j];
                                     }
-
                                 }
+
                                 Cresult[playerX][playerY] = result[i][j];
-                                playerMoved.add(player);
-
-                                if (j === playerX && result.length - 1 - i === playerY) {
-                                    // return maze;
-                                } else {
-                                    Cresult[j][result.length - 1 - i] = '-';
-                                }
-                                if ((playerX === i && playerY === j) || (playerX === j && playerY === result.length - 1 - i)) {
-                                    // return maze;
-                                }
+                                result[i][j] = '-'
                             }
 
                         }
@@ -101,62 +85,50 @@ function manyPlayersManyRotations(maze) {
 
                 case 'cc':
                     const CCresult = Array.from(Array(N), () => new Array(M).fill('-'));
-                    for (let i = 0; i < result.length; i++) {
-                        for (let j = 0; j < result[i].length; j++) {
-                            if ((result[i][j] === 'x' || result[i][j] === '-' || result[i][j] === 'g') || (result[i][j] !== player.toString())) {
+                    for (let i = 0; i < M; i++) {
+                        for (let j = 0; j < N; j++) {
+                            if ((result[i][j] === 'x' || result[i][j] === '-' || result[i][j] === 'g')) {
                                 // the piece other than player stays fixed but relative index change
 
-                                var X = result[i].length - 1 - j;
+                                var X = N - 1 - j;
 
-                                if (CCresult[X][i] === player.toString()) {
 
-                                    // console.log("meet " + maze[i][j] + " at index [" + i + ", " + j + "], player index in the result array for this current location, index not switching");
+                                CCresult[X][i] = result[i][j];
+                                // console.log("switching index of regular peg, from origin index [" + i + ", " + j + "] to [" + X + " " + i + "]");
 
-                                } else {
-                                    CCresult[X][i] = result[i][j];
-                                    // console.log("switching index of regular peg, from origin index [" + i + ", " + j + "] to [" + X + " " + i + "]");
-                                }
                                 // console.log("result after move cc turn: ")
                                 // printMaze(CCresult)
 
-                            } else if (result[i][j] === player.toString()) {
-                                // console.log("meet player at original maze, player initial index(case cc): %s", i + " " + j);
+                            } else {
+                                //every player move together
                                 // if there's no x, can move
                                 let YafterRotate = 0;
                                 let XafterRotate = 0;
-                                let playerMoves = 0;
-                                var needbreak = false;
-                                for (let k = j - 1; k >= 0; k--) {
-                                    if (result[i][k] === 'g' && !needbreak) {
-                                        XafterRotate = N - k - 1;
-                                        YafterRotate = i;
-                                        needbreak = true;
-                                    }
-                                    if (result[i][k] === 'x' && !needbreak) {//block in the way
-                                        // console.log("player index after move: %s", maze[i].length - 1 - k - 1 + " " + i);
-                                        const YbeforeRotate = k + 1;
-                                        YafterRotate = i;
-                                        XafterRotate = result[i].length - 1 - YbeforeRotate;
-                                        playerMoves = j - YbeforeRotate;
-                                        needbreak = true;
-                                    }
-                                }
-                                // if (playerMoves >= 1) {
-                                // console.log("player initial index in maze: [%s] result index in CCresult: [%s]", i + " " + j, XafterRotate + " " + YafterRotate);
-                                CCresult[XafterRotate][YafterRotate] = result[i][j];
-                                // console.log("cross out the original player inedx in original maze: make [%s] in CCresult to \'-\'", maze[i].length - 1 - j + " " + i);
-                                if (result[i].length - 1 - j === XafterRotate && i === YafterRotate) {
-                                    // console.log("player being block, player not move")
-                                    CCresult[result[i].length - 1 - j][i] = result[i][j];
-                                } else {
-                                    CCresult[result[i].length - 1 - j][i] = '-';
-                                }
+                                var CCneedbreak = false;
 
-                                if ((XafterRotate === i && YafterRotate === j)) {//TODO: want to maze after move
-                                    // player not move
-                                    var X = result[i].length - 1 - j;
-                                    CCresult[X][i] = result[i][j];
+                                for (let k = j - 1; k >= 0; k--) {
+
+                                    if (result[i][k] === 'g' && !CCneedbreak) {
+
+                                        XafterRotate = N - 1 - k;
+                                        YafterRotate = i;
+                                        CCneedbreak = true;
+                                    }
+
+                                    if (result[i][k] !== '-' && !CCneedbreak) {
+
+                                        // console.log(i + " "+ j + " "+result[i][j])
+                                        // console.log(i + " "+ k + " "+result[i][k])
+                                        YafterRotate = i;
+                                        XafterRotate = N - 2 - k;
+                                        // console.log("x after rotate "+ XafterRotate)
+                                        // console.log("Y after rotate " + YafterRotate)
+                                        CCneedbreak = true;
+                                        result[i][k + 1] = result[i][j];
+                                    }
                                 }
+                                CCresult[XafterRotate][YafterRotate] = result[i][j];
+                                result[i][j] = '-';
                             }
                         }
                     }
@@ -171,29 +143,58 @@ function manyPlayersManyRotations(maze) {
                 case '180':
                     const flipResult = Array.from(Array(M), () => new Array(N).fill('-'));// correct dimension
 
-                    for (var r = 0; r < result.length; r++) {
-                        for (var c = 0; c < result[r].length; c++) {//correct indexing
-                            if ((result[r][c] === 'x' || result[r][c] === '-' || result[r][c] === 'g') || (result[r][c] !== player.toString())) {
-                                let resulti = result.length - 1 - r;
-                                let resultj = result[r].length - 1 - c;
-                                flipResult[resulti][resultj] = result[r][c];
-                            }
-                            if (result[r][c] === player.toString()) {
-                                var originplayerXFlip = result.length - 1 - r;
-                                var originplayerYFlip = result[r].length - 1 - c;
-                                flipResult[originplayerXFlip][originplayerYFlip] = '-';
+                    for (var i = 0; i < M; i++) {
+                        for (var j = 0; j < N; j++) {//correct indexing
 
-                                for (let k = r - 1; k >= 0; k--) {
-                                    if (result[k][c] === 'x') {
-                                        var playerNewX = result.length - 1 - (k + 1);
-                                        var playerNewY = result[r].length - 1 - c;
-                                        flipResult[playerNewX][playerNewY] = result[r][c];
-                                        break;
+                            if ((result[i][j] === 'x' || result[i][j] === '-' || result[i][j] === 'g')) {
+
+                                let resulti = M - 1 - i;
+                                let resultj = N - 1 - j;
+
+                                if (flipResult[resulti][resultj] === '-') {
+                                    // in case rotated player are already there
+
+                                    flipResult[resulti][resultj] = result[i][j];
+                                    // console.log("symbol: " + result[i][j]);
+                                    // console.log("initial index: " + i + " " + j);
+                                    // console.log("flip index: " + resulti + " " + resultj);
+                                    // helpers.printMaze(flipResult)
+                                    // console.log("========================\n")
+                                }
+
+                            } else {
+
+                                let playerNewX = 0;
+                                let playerNewY = 0;
+                                var flipneedbreak = false;
+
+                                for (let k = i - 1; k >= 0; k--) {
+
+                                    if (result[k][j] === 'g' && !flipneedbreak) {//x or player not in current move
+
+                                        playerNewX = M - 1 - (k + 1);
+                                        playerNewY = N - 1 - j;
+
+                                        flipneedbreak = true;
+                                    }
+
+                                    if (result[k][j] !== '-' && !flipneedbreak) {
+
+                                        playerNewX = M - 1 - (k + 1);//16
+                                        playerNewY = N - 1 - j;//3
+                                        flipneedbreak = true;
                                     }
                                 }
+                                // console.log("symbol: " + result[i][j]);
+                                // console.log("initial index: " + i + " " + j);
+                                // console.log("flip index: " + playerNewX + " " + playerNewY);
+                                flipResult[playerNewX][playerNewY] = result[i][j];
+                                // helpers.printMaze(flipResult)
+                                // console.log("========================\n")
                             }
                         }
                     }
+
                     for (let c = 0; c < flipResult[0].length; c++) {
                         if (flipResult[0][c] === '-') {
                             flipResult[0][c] = '';
@@ -202,13 +203,13 @@ function manyPlayersManyRotations(maze) {
 
                     result = flipResult;
                     break;
+
+                // webgrader will scan last line empty move but it won't affect result maze
             }
-            console.log("after move(player %d): ", player)
 
             helpers.printMaze(result)
             console.log("///=================================///")
-            //=====================//
-            player++;
+
         }
         return result;
     }
