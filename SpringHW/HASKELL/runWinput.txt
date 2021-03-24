@@ -1,0 +1,8 @@
+1. start haskell enviroment in command line
+ghci
+2. load needed function
+:load Helpers.hs
+:load csce322hw03pt0x.hs
+3. run main function in this haskell file with input!
+:main "part01test01.g"
+ --remember to have quotation mark for input file!
