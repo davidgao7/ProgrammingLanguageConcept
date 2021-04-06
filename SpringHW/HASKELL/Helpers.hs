@@ -1,6 +1,11 @@
 module Helpers
 ( readGravityMazeFile
 , printMaze
+( readGravityMazeFile,
+printMaze ,
+printMove,
+mymap,
+findItem,
 ) where
 
 import Prelude
@@ -13,8 +18,16 @@ member e (h:t) = e == h || (member e t)
 
 isPlayer :: Char -> Bool
 isPlayer letter = (member letter "0123456789")
+
 readGravityMazeFile :: String -> IO ([[Char]],[[Char]])
 readGravityMazeFile = readIO
+
+printMove :: [[Char]] -> IO ()
+printMove [] = do
+  print ""
+printMove (h:rest) = do
+  print h
+  printMove rest
 
 printMaze :: [[Char]] -> IO ()
 printMaze [] = do
@@ -22,10 +35,15 @@ printMaze [] = do
 printMaze (ro:ros) = do
  print ro
  printMaze rosmymap :: (a->b) -> [a] ->[b] -- apply function for each element in List
+ printMaze ros
+
+mymap :: (a->b) -> [a] ->[b] -- apply function for each element in List
 mymap _ []    = []
 mymap f (h:t) = (f h):(mymap f t) -- apply function on the head of the list and recursive the rest
+
 findItem :: Eq a => a -> [a] -> [Int] -- return list of index which find the item(0 based indexing)
 findItem e list = (findHelper e list 0)
+
 findHelper :: Eq a => a -> [a] -> Int -> [Int] -- => means loop works on every Eq a
 findHelper _ [] _ = []
 findHelper e (h:t) i
