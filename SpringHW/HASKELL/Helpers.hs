@@ -104,6 +104,9 @@ getPlayerMoveRightResult line n player
  | (line !! (n+1) /= 'x') = clear1dPlayerPerviousPosition (moveRight line n player) n
  | otherwise = line
 
+-- e.g. ["xxxxxx","xx1xxx"] -> ["xx","xx","1x","xx","xx","xx"]
+flipwiseMaze :: [[Char]] -> [[Char]] -- WORK
+flipwiseMaze list = transpose list
 clockwise :: [[Char]] -> Int -> Int -> [[Char]]
 clockwise maze x y
  | ((x == mazeLength - 1) && (y == lineLength - 1)) = maze -- finish all position in maze (WORK)
