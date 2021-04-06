@@ -86,7 +86,9 @@ moveRight list n player
  | otherwise = replace1DListAtIndex list (n-1) player
 
 getPlayerMoveRightResult :: [Char] -> Int -> Char-> [Char]
-getPlayerMoveRightResult line n player = clear1dPlayerPerviousPosition (moveRight line n player) n
+getPlayerMoveRightResult line n player
+ | (line !! (n+1) /= 'x')= clear1dPlayerPerviousPosition (moveRight line n player) n
+ | otherwise = line
 
 clockwise :: [[Char]] -> Int -> Int -> [[Char]]
 clockwise maze x y
