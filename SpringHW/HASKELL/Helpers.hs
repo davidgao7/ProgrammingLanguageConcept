@@ -14,7 +14,9 @@ clockwise,
 moveRight,
 clearPlayerPerviousPosition,
 clear1dPlayerPerviousPosition,
-getPlayerMoveRightResult
+getPlayerMoveRightResult,
+moveLeft,
+getPlayerMoveLeftResult
 -- cclockwise,
 -- flipwise,
 -- clockwiseAll,
@@ -85,9 +87,21 @@ moveRight list n player
  | (list !! n /= 'x') = moveRight list (n+1) player
  | otherwise = replace1DListAtIndex list (n-1) player
 
-getPlayerMoveRightResult :: [Char] -> Int -> Char-> [Char]
+moveLeft :: [Char] -> Int -> Char ->[Char]
+moveLeft [] _ _ = []
+moveLeft [e] _ _ = [e]
+moveLeft list n player
+ | (list !! n /= 'x') = moveLeft list (n-1) player
+ | otherwise = replace1DListAtIndex list (n+1) player
+
+getPlayerMoveLeftResult :: [Char] -> Int -> Char-> [Char] -- WORK
+getPlayerMoveLeftResult line n player
+ | (line !! (n-1) /= 'x') = clear1dPlayerPerviousPosition (moveLeft line n player) n
+ | otherwise = line
+
+getPlayerMoveRightResult :: [Char] -> Int -> Char-> [Char] -- WORK
 getPlayerMoveRightResult line n player
- | (line !! (n+1) /= 'x')= clear1dPlayerPerviousPosition (moveRight line n player) n
+ | (line !! (n+1) /= 'x') = clear1dPlayerPerviousPosition (moveRight line n player) n
  | otherwise = line
 
 clockwise :: [[Char]] -> Int -> Int -> [[Char]]
