@@ -2,8 +2,9 @@ module Helpers
 ( readGravityMazeFile,
 printMaze ,
 printMove,
-mymap,
-findItem,
+-- mymap,
+-- findItem,
+-- findHelper,
 replace1DListAtIndex,
 replace2DListAtIndex,
 cPlayer,
@@ -16,7 +17,10 @@ clearPlayerPerviousPosition,
 clear1dPlayerPerviousPosition,
 getPlayerMoveRightResult,
 moveLeft,
-getPlayerMoveLeftResult
+getPlayerMoveLeftResult,
+flipwiseMaze,
+append1dListRowWise,
+append1dListTo2dListRowWise
 -- cclockwise,
 -- flipwise,
 -- clockwiseAll,
@@ -32,8 +36,6 @@ import Data.List
 -- clockwiseAll maze = clockwise maze
 
 -- cclockwiseAll :: [[Char]] -> [[Char]] --TODO: loop all peg with its index
---
--- flipAll :: [[Char]] -> [[Char]] --TODO: loop all peg with its index
 
 -- clockwise ["xxxxx", "xx1-x", "xx-xx", "xxxxx"] 1 2
 
@@ -61,33 +63,45 @@ printMaze (ro:ros) = do
  print ro
  printMaze ros
 
-mymap :: (a->b) -> [a] ->[b] -- apply function for each element in List
-mymap _ []    = []
-mymap f (h:t) = (f h):(mymap f t) -- apply function on the head of the list and recursive the rest
+-- mymap :: (a->b) -> [a] ->[b] -- apply function for each element in List
+-- mymap _ []    = []
+-- mymap f (h:t) = (f h):(mymap f t) -- apply function on the head of the list and recursive the rest
 
-findItem :: Eq a => a -> [a] -> [Int] -- return list of index which find the item(0 based indexing)
-findItem e list = (findHelper e list 0)
+-- findItem :: Eq a => a -> [a] -> [Int] -- return list of index which find the item(0 based indexing)
+-- findItem e list = (findHelper e list 0)
 
-findHelper :: Eq a => a -> [a] -> Int -> [Int] -- => means loop works on every Eq a
-findHelper _ [] _ = []
-findHelper e (h:t) i
-          | (e == h) = i:(findHelper e t (i + 1)) -- find the item at head, put current index at head, and find rest list
-          | otherwise= (findHelper e t (i + 1)) -- didn't find , increament index keep finding
+-- findHelper :: Eq a => a -> [a] -> Int -> [Int] -- => means loop works on every Eq a
+-- findHelper _ [] _ = []
+-- findHelper e (h:t) i
+--           | (e == h) = i:(findHelper e t (i + 1)) -- find the item at head, put current index at head, and find rest list
+--           | otherwise= (findHelper e t (i + 1)) -- didn't find , increament index keep finding
+replace1DListAtIndex :: [Char] -> Int -> Char -> [Char] -- WORK
+replace1DListAtIndex "" _ _ = ""
+replace1DListAtIndex [e1] 0 e2 = [e2]
+replace1DListAtIndex list n e2
+  | list !! n == e2 = list
+  | otherwise = take n list ++ [e2] ++ drop (n + 1) list
 
-clearPlayerPerviousPosition :: [[Char]] -> Int -> Int -> [[Char]]
+replace2DListAtIndex :: [[Char]] -> Int -> Int -> Char -> [[Char]] -- WORK
+replace2DListAtIndex [""] _ _ _ = [""]
+replace2DListAtIndex (row:rest) r c e
+  | (r==0)    = [replace1DListAtIndex row c e] ++ rest
+  | otherwise = [row] ++ replace2DListAtIndex rest (r - 1) c e
+
+clearPlayerPerviousPosition :: [[Char]] -> Int -> Int -> [[Char]] -- WORK
 clearPlayerPerviousPosition maze x y = replace2DListAtIndex maze x y '-'
 
-clear1dPlayerPerviousPosition :: [Char] -> Int -> [Char]
+clear1dPlayerPerviousPosition :: [Char] -> Int -> [Char] -- WORK
 clear1dPlayerPerviousPosition maze i = replace1DListAtIndex maze i '-'
 
-moveRight :: [Char] -> Int -> Char ->[Char]
+moveRight :: [Char] -> Int -> Char ->[Char] -- WORK
 moveRight [] _ _ = []
 moveRight [e] _ _ = [e]
 moveRight list n player
  | (list !! n /= 'x') = moveRight list (n+1) player
  | otherwise = replace1DListAtIndex list (n-1) player
 
-moveLeft :: [Char] -> Int -> Char ->[Char]
+moveLeft :: [Char] -> Int -> Char ->[Char] -- WORK
 moveLeft [] _ _ = []
 moveLeft [e] _ _ = [e]
 moveLeft list n player
@@ -107,9 +121,22 @@ getPlayerMoveRightResult line n player
 -- e.g. ["xxxxxx","xx1xxx"] -> ["xx","xx","1x","xx","xx","xx"]
 flipwiseMaze :: [[Char]] -> [[Char]] -- WORK
 flipwiseMaze list = transpose list
+
+append1dListRowWise :: [Char] -> [Char] -> [[Char]] -- WORK
+append1dListRowWise row1 row2 = [row1] ++ [row2]
+
+append1dListTo2dListRowWise :: [Char] -> [[Char]] -> [[Char]] -- WORK
+append1dListTo2dListRowWise moveResult fragMaze = fragMaze ++ [moveResult]
+
+--TODO: write a function to satisfy this line :
+-- *Helpers> append1dListTo2dListRowWise (getPlayerMoveLeftResult "x---1x" 4 '1') ["x----x", "xxxxxx"]
+-- ["x----x","xxxxxx","x1---x"]
+movePlayerClockwiseBeforeRotate :: [[Char]] -> Int -> Char -> [[Char]]
+movePlayerClockwiseBeforeRotate [line:rest] n player = append1dListTo2dListRowWise (getPlayerMoveLeftResult line n player) rest
+
 clockwise :: [[Char]] -> Int -> Int -> [[Char]]
 clockwise maze x y
- | ((x == mazeLength - 1) && (y == lineLength - 1)) = maze -- finish all position in maze (WORK)
+ | ((x == mazeLength - 1) && (y == lineLength - 1)) = maze
  | ((maze !! x !! y == 'x') || (maze !! x !! y == '-') || (maze !! x !! y == 'g')) = clockwise maze x (y + 1) ++ (drop (x + 1) (replace2DListAtIndex maze y (subtract x (mazeLength - 1)) (maze !! x !! y)))
  | (isPlayer(maze !! x !! y)) = clockwise maze x (y + 1) ++ (drop (x + 1) (cPlayer maze x y (maze !! x !! y)))
 
@@ -127,17 +154,3 @@ ccPlayer :: [[Char]] -> Int -> Int -> Char -> [[Char]]
 ccPlayer maze x y player
   | maze !! x !! (y + 1) == '-' = ccPlayer maze x (y - 1) player
   | maze !! x !! (y + 1) == 'x' = replace2DListAtIndex maze y (subtract y (length(maze !! 0) - 1)) player
-
-
-replace1DListAtIndex :: [Char] -> Int -> Char -> [Char] -- WORK
-replace1DListAtIndex "" _ _ = ""
-replace1DListAtIndex [e1] 0 e2 = [e2]
-replace1DListAtIndex list n e2
-  | list !! n == e2 = list
-  | otherwise = take n list ++ [e2] ++ drop (n + 1) list
-
-replace2DListAtIndex :: [[Char]] -> Int -> Int -> Char -> [[Char]] -- WORK
-replace2DListAtIndex [""] _ _ _ = [""]
-replace2DListAtIndex (row:rest) r c e
-  | (r==0)    = [replace1DListAtIndex row c e] ++ rest
-  | otherwise = [row] ++ replace2DListAtIndex rest (r - 1) c e
