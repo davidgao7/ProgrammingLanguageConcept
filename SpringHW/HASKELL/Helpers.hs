@@ -2,9 +2,6 @@ module Helpers
 ( readGravityMazeFile,
 printMaze ,
 printMove,
--- mymap,
--- findItem,
--- findHelper,
 replace1DListAtIndex,
 replace2DListAtIndex,
 -- cPlayer,
@@ -27,7 +24,10 @@ getcol,
 clockwiseMaze,
 clockwiseMazeResult,
 cclockwiseMaze,
-cclockwiseMazeResult
+cclockwiseMazeResult,
+find2dPlayerPostion,
+find1dPlayerPosition,
+clockwiseMazewithoutPlayerIndexAsInput
 -- cclockwise,
 -- flipwise,
 -- clockwiseAll,
@@ -164,6 +164,34 @@ clockwiseMazeResult maze playerX playerY = clockwiseMaze (mazeBeforeRotateMovePl
 -- ["xxx","x-x","x1x","xxx"]
 cclockwiseMazeResult :: [[Char]] -> Int -> Int -> [[Char]] -- WORK
 cclockwiseMazeResult maze playerX playerY = cclockwiseMaze (mazeBeforeRotateMovePlayerLeft maze playerX playerY) 0
+
+-- *Helpers> find1dPlayerPosition "x-1x" 0
+-- 2
+-- *Helpers> find1dPlayerPosition "x----xxx1x" 0
+-- 8
+find1dPlayerPosition :: [Char] -> Int -> Int -- WORK
+find1dPlayerPosition row idx
+ | (idx > (length(row)-1))                     = -1 -- cannot find player
+ | ((row !! idx /= 'x') && (row !! idx /= '-'))= idx
+ | otherwise                                   = find1dPlayerPosition row (idx+1)
+
+-- get index of first player seen in 2d maze
+-- *Helpers> find2dPlayerPostion ["xxx", "x-x", "x1x", "xxx"] 0
+-- [2,1]
+-- *Helpers> find2dPlayerPostion ["xxx", "x-x", "x-x", "xxx"] 0
+-- [-1,-1]
+find2dPlayerPostion :: [[Char]] -> Int -> [Int] -- WORK
+find2dPlayerPostion (row:rest) r
+ | (length(rest)==0)                  = [-1,-1]-- cannot find player
+ | (find1dPlayerPosition row 0 == -1) = find2dPlayerPostion rest (r+1)
+ | otherwise                          = [r] ++ [find1dPlayerPosition row 0]
+
+-- *Helpers> clockwiseMazeResult ["xxxx", "x1-x", "xxxx"] ((find2dPlayerPostion ["xxxx", "x1-x", "xxxx"] 0)!!0) ((find2dPlayerPostion ["xxxx", "x1-x", "xxxx"] 0)!!1)
+-- ["xxx","x-x","x1x","xxx"]
+clockwiseMazewithoutPlayerIndexAsInput :: [[Char]] -> [[Char]]
+clockwiseMazewithoutPlayerIndexAsInput maze = clockwiseMazeResult maze ((find2dPlayerPostion maze 0)!!0) ((find2dPlayerPostion maze 0)!!1)
+
+
 
 -- cPlayer :: [[Char]] -> Int -> Int -> Char -> [[Char]]
 -- cPlayer maze x y player
