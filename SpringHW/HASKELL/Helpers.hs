@@ -11,7 +11,6 @@ cPlayer,
 ccPlayer,
 isPlayer,
 member,
--- clockwise,
 moveRight,
 clearPlayerPerviousPosition,
 clear1dPlayerPerviousPosition,
@@ -26,7 +25,7 @@ mazeBeforeRotateMovePlayerLeft,
 mazeBeforeRotateMovePlayerRight
 -- cclockwise,
 -- flipwise,
--- clockwiseAll,
+clockwiseAll,
 -- flipAll,
 -- cclockwiseAll
 ) where
@@ -35,8 +34,6 @@ import Prelude
 import Data.Char
 import Data.List
 
--- clockwiseAll :: [[Char]] -> [[Char]] --TODO: loop all peg with its index
--- clockwiseAll maze = clockwise maze
 
 -- cclockwiseAll :: [[Char]] -> [[Char]] --TODO: loop all peg with its index
 
@@ -134,6 +131,10 @@ mazeBeforeRotateMovePlayerLeft maze playerX playerY = (movePlayerLeftBeforeRotat
 mazeBeforeRotateMovePlayerRight:: [[Char]] -> Int -> Int -> [[Char]] -- WORK
 mazeBeforeRotateMovePlayerRight maze playerX playerY = movePlayerRightBeforeRotate (maze!!playerX) playerY (maze!!playerX!!playerY) (take playerX maze) ++ (drop (playerX+1) maze)
 
+-- TODO: move player to correct position before clockwise
+-- TODO: clockwise the intermediate maze
+clockwiseAll :: [[Char]] -> [[Char]]
+clockwiseAll
 
 cPlayer :: [[Char]] -> Int -> Int -> Char -> [[Char]]
 cPlayer maze x y player
