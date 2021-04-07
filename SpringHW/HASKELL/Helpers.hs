@@ -7,8 +7,8 @@ printMove,
 -- findHelper,
 replace1DListAtIndex,
 replace2DListAtIndex,
-cPlayer,
-ccPlayer,
+-- cPlayer,
+-- ccPlayer,
 isPlayer,
 member,
 moveRight,
@@ -22,10 +22,15 @@ append1dListTo2dListRowWise,
 movePlayerLeftBeforeRotate,
 movePlayerRightBeforeRotate,
 mazeBeforeRotateMovePlayerLeft,
-mazeBeforeRotateMovePlayerRight
+mazeBeforeRotateMovePlayerRight,
+getcol,
+clockwiseMaze,
+clockwiseMazeResult,
+cclockwiseMaze,
+cclockwiseMazeResult
 -- cclockwise,
 -- flipwise,
-clockwiseAll,
+-- clockwiseAll,
 -- flipAll,
 -- cclockwiseAll
 ) where
@@ -33,10 +38,6 @@ clockwiseAll,
 import Prelude
 import Data.Char
 import Data.List
-
-
--- cclockwiseAll :: [[Char]] -> [[Char]] --TODO: loop all peg with its index
-
 
 member :: Eq a => a -> [a] -> Bool
 member _ [] = False
@@ -66,14 +67,14 @@ replace1DListAtIndex :: [Char] -> Int -> Char -> [Char] -- WORK
 replace1DListAtIndex "" _ _ = ""
 replace1DListAtIndex [e1] 0 e2 = [e2]
 replace1DListAtIndex list n e2
-  | list !! n == e2 = list
-  | otherwise = take n list ++ [e2] ++ drop (n + 1) list
+ | list !! n == e2 = list
+ | otherwise       = take n list ++ [e2] ++ drop (n + 1) list
 
 replace2DListAtIndex :: [[Char]] -> Int -> Int -> Char -> [[Char]] -- WORK
 replace2DListAtIndex [""] _ _ _ = [""]
 replace2DListAtIndex (row:rest) r c e
-  | (r==0)    = [replace1DListAtIndex row c e] ++ rest
-  | otherwise = [row] ++ replace2DListAtIndex rest (r - 1) c e
+ | (r==0)    = [replace1DListAtIndex row c e] ++ rest
+ | otherwise = [row] ++ replace2DListAtIndex rest (r - 1) c e
 
 clearPlayerPerviousPosition :: [[Char]] -> Int -> Int -> [[Char]] -- WORK
 clearPlayerPerviousPosition maze x y = replace2DListAtIndex maze x y '-'
@@ -86,24 +87,24 @@ moveRight [] _ _ = []
 moveRight [e] _ _ = [e]
 moveRight list n player
  | (list !! n /= 'x') = moveRight list (n+1) player
- | otherwise = replace1DListAtIndex list (n-1) player
+ | otherwise          = replace1DListAtIndex list (n-1) player
 
 moveLeft :: [Char] -> Int -> Char ->[Char] -- WORK
 moveLeft [] _ _ = []
 moveLeft [e] _ _ = [e]
 moveLeft list n player
  | (list !! n /= 'x') = moveLeft list (n-1) player
- | otherwise = replace1DListAtIndex list (n+1) player
+ | otherwise          = replace1DListAtIndex list (n+1) player
 
 getPlayerMoveLeftResult :: [Char] -> Int -> Char-> [Char] -- WORK
 getPlayerMoveLeftResult line n player
  | (line !! (n-1) /= 'x') = clear1dPlayerPerviousPosition (moveLeft line n player) n
- | otherwise = line
+ | otherwise              = line
 
 getPlayerMoveRightResult :: [Char] -> Int -> Char-> [Char] -- WORK
 getPlayerMoveRightResult line n player
  | (line !! (n+1) /= 'x') = clear1dPlayerPerviousPosition (moveRight line n player) n
- | otherwise = line
+ | otherwise              = line
 
 append1dListRowWise :: [Char] -> [Char] -> [[Char]] -- WORK
 append1dListRowWise row1 row2 = [row1] ++ [row2]
@@ -131,18 +132,46 @@ mazeBeforeRotateMovePlayerLeft maze playerX playerY = (movePlayerLeftBeforeRotat
 mazeBeforeRotateMovePlayerRight:: [[Char]] -> Int -> Int -> [[Char]] -- WORK
 mazeBeforeRotateMovePlayerRight maze playerX playerY = movePlayerRightBeforeRotate (maze!!playerX) playerY (maze!!playerX!!playerY) (take playerX maze) ++ (drop (playerX+1) maze)
 
--- TODO: move player to correct position before clockwise
--- TODO: clockwise the intermediate maze
-clockwiseAll :: [[Char]] -> [[Char]]
-clockwiseAll
+-- ["xxxx","x-1x", "xxxx"] 0 => ["xxx"]
+getcol :: [[Char]] -> Int -> [Char] -- WORK
+getcol [] _       = []
+getcol (h:rest) n = [h!!n] ++ (getcol rest n)
 
-cPlayer :: [[Char]] -> Int -> Int -> Char -> [[Char]]
-cPlayer maze x y player
-  | maze !! x !! (y + 1) == '-' = cPlayer maze x (y + 1) player
-  | maze !! x !! (y + 1) == 'x' = replace2DListAtIndex maze y (subtract x (length(maze) - 1)) player
+-- *Helpers> clockwiseMaze ["xxxx", "x1-x", "xxxx"] 0
+-- ["xxx","x1x","x-x","xxx"]
+clockwiseMaze :: [[Char]] -> Int -> [[Char]] --WORK
+clockwiseMaze maze n
+ | ((n+1) > length(maze!!0)) = []
+ | otherwise                 = [getcol maze n] ++ (clockwiseMaze maze (n+1))
 
+-- *Helpers> cclockwiseMaze ["xxxx", "x1-x", "xxxx"] 0
+-- ["xxx","x-x","x1x","xxx"]
+cclockwiseMaze :: [[Char]] -> Int -> [[Char]] --WORK
+cclockwiseMaze maze n
+ | ((n+1) > length(maze!!0)) = []
+ | otherwise                 = [getcol maze (length(maze!!0)-(n+1))] ++ (cclockwiseMaze maze (n+1))
 
-ccPlayer :: [[Char]] -> Int -> Int -> Char -> [[Char]]
-ccPlayer maze x y player
-  | maze !! x !! (y + 1) == '-' = ccPlayer maze x (y - 1) player
-  | maze !! x !! (y + 1) == 'x' = replace2DListAtIndex maze y (subtract y (length(maze !! 0) - 1)) player
+ -- *Helpers> clockwiseMaze (mazeBeforeRotateMovePlayerRight ["xxxx", "x1-x", "xxxx"] 1 1) 0
+ -- ["xxx","x-x","x1x","xxx"]
+--  *Helpers> clockwiseMazeResult ["xxxx", "x1-x", "xxxx"] 1 1
+-- ["xxx","x-x","x1x","xxx"]
+clockwiseMazeResult :: [[Char]] -> Int -> Int -> [[Char]] -- WORK
+clockwiseMazeResult maze playerX playerY = clockwiseMaze (mazeBeforeRotateMovePlayerRight maze playerX playerY) 0
+
+-- cclockwiseMaze (mazeBeforeRotateMovePlayerLeft ["xxxx", "x-1x", "xxxx"] 1 2) 0
+-- ["xxx","x-x","x1x","xxx"]
+-- *Helpers> cclockwiseMazeResult ["xxxx", "x-1x", "xxxx"] 1 2
+-- ["xxx","x-x","x1x","xxx"]
+cclockwiseMazeResult :: [[Char]] -> Int -> Int -> [[Char]] -- WORK
+cclockwiseMazeResult maze playerX playerY = cclockwiseMaze (mazeBeforeRotateMovePlayerLeft maze playerX playerY) 0
+
+-- cPlayer :: [[Char]] -> Int -> Int -> Char -> [[Char]]
+-- cPlayer maze x y player
+--  | maze !! x !! (y + 1) == '-' = cPlayer maze x (y + 1) player
+--  | maze !! x !! (y + 1) == 'x' = replace2DListAtIndex maze y (subtract x (length(maze) - 1)) player
+--
+--
+-- ccPlayer :: [[Char]] -> Int -> Int -> Char -> [[Char]]
+-- ccPlayer maze x y player
+--  | maze !! x !! (y + 1) == '-' = ccPlayer maze x (y - 1) player
+--  | maze !! x !! (y + 1) == 'x' = replace2DListAtIndex maze y (subtract y (length(maze !! 0) - 1)) player
