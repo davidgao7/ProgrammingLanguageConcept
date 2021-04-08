@@ -156,6 +156,11 @@ cclockwiseMaze maze n
  | otherwise                 = [getcol maze (length(maze!!0)-(n+1))] ++ (cclockwiseMaze maze (n+1))
 
  -- *Helpers> clockwiseMaze (mazeBeforeRotateMovePlayerRight ["xxxx", "x1-x", "xxxx"] 1 1) 0
+ find1dPlayerPosition :: [Char] -> Int -> Int -- WORK
+ find1dPlayerPosition row idx
+  | (idx > (length(row)-1))                     = -1 -- cannot find player
+  | ((row !! idx /= 'x') && (row !! idx /= '-') && (row !! idx /= 'g'))= idx
+  | otherwise                                   = find1dPlayerPosition row (idx+1)
  -- ["xxx","x-x","x1x","xxx"]
 --  *Helpers> clockwiseMazeResult ["xxxx", "x1-x", "xxxx"] 1 1
 -- ["xxx","x-x","x1x","xxx"]
