@@ -22,6 +22,7 @@ onePlayerOneRotation :: [[Char]] -> [Char] -> [[Char]]
 onePlayerOneRotation [] _ = []
 onePlayerOneRotation maze move
                     | move == "c"  = clockwise maze 0 0
+                    | move == "c"  = clockwiseMazewithoutPlayerIndexAsInput maze
                     -- | move == "cc" = cclockwiseAll maze
                     -- | move == "180"= flipAll maze
                     | otherwise    = maze
