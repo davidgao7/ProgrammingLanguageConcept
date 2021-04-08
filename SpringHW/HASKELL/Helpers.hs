@@ -139,12 +139,12 @@ getcol [] _       = []
 getcol (h:rest) n = [h!!n] ++ (getcol rest n)
 
 -- no need to consider player move (palyer already move)
-clockwiseMaze :: [[Char]] -> Int -> [[Char]] --TODO: not correct output
+clockwiseMaze :: [[Char]] -> Int -> [[Char]]
 clockwiseMaze mazeAfterplayerMove n -- n starts from 0
  | ((n+1) > length(mazeAfterplayerMove!!0)) = [] -- finish loop through all token in maze
  | otherwise                 = [(backward (getcol mazeAfterplayerMove n))] ++ (clockwiseMaze mazeAfterplayerMove (n+1))
 
-backward :: [Char] -> [Char]
+backward :: [Char] -> [Char] -- WORK
 backward []       = []
 backward (h:rest) = backward rest ++ [h]
 
@@ -192,7 +192,7 @@ find2dPlayerPostion (row:rest) r
 
 -- *Helpers> clockwiseMazeResult ["xxxx", "x1-x", "xxxx"] ((find2dPlayerPostion ["xxxx", "x1-x", "xxxx"] 0)!!0) ((find2dPlayerPostion ["xxxx", "x1-x", "xxxx"] 0)!!1)
 -- ["xxx","x-x","x1x","xxx"]
-clockwiseMazewithoutPlayerIndexAsInput :: [[Char]] -> [[Char]]
+clockwiseMazewithoutPlayerIndexAsInput :: [[Char]] -> [[Char]] -- WORK
 clockwiseMazewithoutPlayerIndexAsInput maze = clockwiseMazeResult maze ((find2dPlayerPostion maze 0)!!0) ((find2dPlayerPostion maze 0)!!1)
 
 
