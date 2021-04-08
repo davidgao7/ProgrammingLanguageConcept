@@ -139,7 +139,7 @@ getcol (h:rest) n = [h!!n] ++ (getcol rest n)
 
 -- *Helpers> clockwiseMaze ["xxxx", "x1-x", "xxxx"] 0
 -- ["xxx","x1x","x-x","xxx"]
-clockwiseMaze :: [[Char]] -> Int -> [[Char]] --WORK
+clockwiseMaze :: [[Char]] -> Int -> [[Char]] --TODO: not correct output
 clockwiseMaze maze n
  | ((n+1) > length(maze!!0)) = []
  | otherwise                 = [getcol maze n] ++ (clockwiseMaze maze (n+1))
