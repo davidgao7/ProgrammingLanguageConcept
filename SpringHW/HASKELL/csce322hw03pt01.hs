@@ -13,7 +13,7 @@ main = do
  -- print "moves"
  -- print (head moves)
  -- print "onePlayerOneRotation: "
- -- print "Result"
+ print "Result"
  printMaze (onePlayerOneRotation maze (head moves))
 
 -- YOUR CODE SHOULD COME AFTER THIS POINT
@@ -22,6 +22,6 @@ onePlayerOneRotation :: [[Char]] -> [Char] -> [[Char]]
 onePlayerOneRotation [] _ = []
 onePlayerOneRotation maze move
                     | move == "c"  = clockwiseMazewithoutPlayerIndexAsInput maze
-                    -- | move == "cc" = cclockwiseAll maze
+                    | move == "cc" = cclockwiseMazewithoutPlayerIndexAsInput maze
                     -- | move == "180"= flipAll maze
                     | otherwise    = maze

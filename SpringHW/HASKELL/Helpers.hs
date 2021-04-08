@@ -28,7 +28,8 @@ cclockwiseMazeResult,
 find2dPlayerPostion,
 find1dPlayerPosition,
 clockwiseMazewithoutPlayerIndexAsInput,
-backward
+backward,
+cclockwiseMazewithoutPlayerIndexAsInput
 -- cclockwise,
 -- flipwise,
 -- clockwiseAll,
@@ -195,6 +196,8 @@ where
  clockwiseMazewithoutPlayerIndexAsInput :: [[Char]] -> [[Char]] -- WORK
  clockwiseMazewithoutPlayerIndexAsInput maze = clockwiseMazeResult maze ((find2dPlayerPostion maze 0)!!0) ((find2dPlayerPostion maze 0)!!1)
 
+ cclockwiseMazewithoutPlayerIndexAsInput :: [[Char]] -> [[Char]]
+ cclockwiseMazewithoutPlayerIndexAsInput maze = cclockwiseMazeResult maze ((find2dPlayerPostion maze 0)!!0) ((find2dPlayerPostion maze 0)!!1)
  -- cPlayer :: [[Char]] -> Int -> Int -> Char -> [[Char]]
  -- cPlayer maze x y player
  --  | maze !! x !! (y + 1) == '-' = cPlayer maze x (y + 1) player
