@@ -121,8 +121,10 @@ where
   | (line !! (n+1) /= 'x') = clear1dPlayerPerviousPosition (moveRight line n player) n
   | otherwise              = line
  -------------------------------------------------
- getPlayerMoveUpResult :: [[Char]] -> Int -> Int -> Char -> [[Char]] --WORK
- getPlayerMoveUpResult maze x y player = clearPlayerPerviousPosition (moveUp maze x y player) x y
+ getPlayerMoveUpResult :: [[Char]] -> Int -> Int -> Char -> [[Char]]
+ getPlayerMoveUpResult maze x y player
+  | (maze !! (x-1) !! y /= 'x') = clearPlayerPerviousPosition (moveUp maze x y player) x y
+  | otherwise                   = maze -- not move
  -------------------------------------------------
  append1dListTo2dListRowWise :: [Char] -> [[Char]] -> [[Char]] -- WORK
  append1dListTo2dListRowWise moveResult fragMaze = fragMaze ++ [moveResult]
