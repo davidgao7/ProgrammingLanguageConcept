@@ -74,26 +74,27 @@ where
   | (r==0)    = [replace1DListAtIndex row c e] ++ rest
   | otherwise = [row] ++ replace2DListAtIndex rest (r - 1) c e
  -------------------------------------------------
- moveUp :: [[Char]] -> Int -> Int -> Char -> [[Char]] -- WORK
+ moveUp :: [[Char]] -> Int -> Int -> Char -> [[Char]]
  moveUp [] _ _ _ = []
  moveUp [d1list] _ _ _ = [d1list]
  moveUp maze x y player
-  | (maze !! (x-1) !! y /= 'x') = moveUp maze (x-1) y player
+  | ((maze !! (x-1) !! y /= 'x') && (maze !! (x-1) !! y /= 'g'))= moveUp maze (x-1) y player -- Not 'x',not 'g' so can move up
+  | (maze !! (x-1) !! y == 'g') = replace2DListAtIndex maze (x-1) y player -- meet goal, stop
   | otherwise                   = replace2DListAtIndex maze x y player
  -------------------------------------------------
- moveRight :: [Char] -> Int -> Char ->[Char] -- WORK
+ moveRight :: [Char] -> Int -> Char ->[Char]
  moveRight [] _ _ = []
  moveRight [e] _ _ = [e]
  moveRight list n player
-  | (list !! n /= 'x') = moveRight list (n+1) player
-  | otherwise          = replace1DListAtIndex list (n-1) player
+  | ((list !! (n+1) /= 'x') && (list !! n /= 'g')) = moveRight list (n+1) player -- Not 'x', not 'g' so can moveright
+  | otherwise                                      = replace1DListAtIndex list n player
  -------------------------------------------------
- moveLeft :: [Char] -> Int -> Char ->[Char] -- WORK
+ moveLeft :: [Char] -> Int -> Char ->[Char]
  moveLeft [] _ _ = []
  moveLeft [e] _ _ = [e]
  moveLeft list n player
-  | (list !! n /= 'x') = moveLeft list (n-1) player
-  | otherwise          = replace1DListAtIndex list (n+1) player
+  | ((list !! (n-1) /= 'x') && (list !! n /= 'g')) = moveLeft list (n-1) player
+  | otherwise                                      = replace1DListAtIndex list n player
  -------------------------------------------------
  clear1dPlayerPerviousPosition :: [Char] -> Int -> [Char] -- WORK
  clear1dPlayerPerviousPosition maze i = replace1DListAtIndex maze i '-'
@@ -228,7 +229,7 @@ where
  cclockwiseMazewithoutPlayerIndexAsInput :: [[Char]] -> [[Char]] -- WORK
  cclockwiseMazewithoutPlayerIndexAsInput maze = cclockwiseMazeResult maze ((find2dPlayerPostion maze 0)!!0) ((find2dPlayerPostion maze 0)!!1)
  -------------------------------------------------
- flipMazewithouIndexAsInput :: [[Char]] -> [[Char]] -- TODO: part01test18 没过
+ flipMazewithouIndexAsInput :: [[Char]] -> [[Char]] -- TODO: part01test12 没过
  flipMazewithouIndexAsInput maze = flipwiseMaze mazeAfterplayerMove 0
                                    where
                                     mazeAfterplayerMove = getPlayerMoveUpResult maze x y player
