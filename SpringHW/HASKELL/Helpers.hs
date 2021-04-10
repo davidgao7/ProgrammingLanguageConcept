@@ -41,6 +41,7 @@ cclockwiseMazewithoutPlayerIndexAsInput,
 hasgoalLine,
 hasgoal,
 findPlayers,
+find2dMultiPlayersPostion
 )
 where
  import Prelude
@@ -259,3 +260,13 @@ where
   | (((x+1)<(length(maze)-1)) && ((y+1)>=(length(maze!!x)-1)))           = findPlayers maze (x+1) 0 -- find next row
   | ((not(isPlayer(maze !! x !! y))) && ((y+1) < (length(maze !! x)-1))) = findPlayers maze x (y+1) -- not find in col
   | otherwise                                                            = []
+ -------------------------------------------------
+ find2dMultiPlayersPostion :: [[Char]] -> Int -> Int -> [[Int]] -- same player order with findPlayers -- WORK
+ find2dMultiPlayersPostion [] _ _ = []
+ find2dMultiPlayersPostion maze x y
+  | (x > (length(maze)-1))                                               = [] -- go through all maze
+  | (isPlayer(maze !! x !! y))                                           = [[x]++[y]] ++ find2dMultiPlayersPostion maze x (y+1) -- find in col
+  | (((x+1)<(length(maze)-1)) && ((y+1)>=(length(maze!!x)-1)))           = find2dMultiPlayersPostion maze (x+1) 0 -- find next row
+  | ((not(isPlayer(maze !! x !! y))) && ((y+1) < (length(maze !! x)-1))) = find2dMultiPlayersPostion maze x (y+1) -- not find in col
+  | otherwise                                                            = []
+-------------------------------------------------
