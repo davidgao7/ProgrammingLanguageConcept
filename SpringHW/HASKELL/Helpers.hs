@@ -42,6 +42,7 @@ hasgoalLine,
 hasgoal,
 findPlayers,
 find2dMultiPlayersPostion
+find2dMultiPlayersPostion,
 )
 where
  import Prelude
@@ -261,6 +262,15 @@ where
   | ((not(isPlayer(maze !! x !! y))) && ((y+1) < (length(maze !! x)-1))) = findPlayers maze x (y+1) -- not find in col
   | otherwise                                                            = []
  -------------------------------------------------
+--  *Helpers> find2dMultiPlayersPostion ["xxxxxx", "x----x","x----x","xx-1xx","x--2-x","x----x3x----x","x--xg4x","xxxxxx"] 0 0
+-- [
+-- [1,3,3], ==> [player,x,y]
+-- [2,4,3],
+-- [3,5,6],
+-- [4,6,5]
+--]
+-- *Helpers> find2dMultiPlayersPostion ["xxxxxx", "x----x","x----x","xx-3xx","x--1-x","x----x4x----x","x--xg2x","xxxxxx"] 0 0
+-- [[3,3,3],[1,4,3],[4,5,6],[2,6,5]] order doesn't matter
  find2dMultiPlayersPostion :: [[Char]] -> Int -> Int -> [[Int]] -- same player order with findPlayers -- WORK
  find2dMultiPlayersPostion [] _ _ = []
  find2dMultiPlayersPostion maze x y
