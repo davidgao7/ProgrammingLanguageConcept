@@ -39,7 +39,7 @@ clockwiseMazewithoutPlayerIndexAsInput,
 cclockwiseMazewithoutPlayerIndexAsInput,
 -------------------------------------------------
 hasgoalLine,
-hasgoal
+hasgoal,
 )
 where
  import Prelude
@@ -76,7 +76,7 @@ where
   | (r==0)    = [replace1DListAtIndex row c e] ++ rest
   | otherwise = [row] ++ replace2DListAtIndex rest (r - 1) c e
  -------------------------------------------------
- moveUp :: [[Char]] -> Int -> Int -> Char -> [[Char]]
+ moveUp :: [[Char]] -> Int -> Int -> Char -> [[Char]] --WORK
  moveUp [] _ _ _ = []
  moveUp [d1list] _ _ _ = [d1list]
  moveUp maze x y player
@@ -84,14 +84,14 @@ where
   | (maze !! (x-1) !! y == 'g') = replace2DListAtIndex maze (x-1) y player -- meet goal, stop
   | otherwise                   = replace2DListAtIndex maze x y player
  -------------------------------------------------
- moveRight :: [Char] -> Int -> Char ->[Char]
+ moveRight :: [Char] -> Int -> Char ->[Char] --WORK
  moveRight [] _ _ = []
  moveRight [e] _ _ = [e]
  moveRight list n player
   | ((list !! (n+1) /= 'x') && (list !! n /= 'g')) = moveRight list (n+1) player -- Not 'x', not 'g' so can moveright
   | otherwise                                      = replace1DListAtIndex list n player
  -------------------------------------------------
- moveLeft :: [Char] -> Int -> Char ->[Char]
+ moveLeft :: [Char] -> Int -> Char ->[Char] --WORK
  moveLeft [] _ _ = []
  moveLeft [e] _ _ = [e]
  moveLeft list n player
@@ -249,3 +249,5 @@ where
  hasgoal :: [[Char]] -> Bool -- WORK
  hasgoal [] = False
  hasgoal (row:rest) = ((hasgoalLine row) || (hasgoal rest))
+ -------------------------------------------------
+ 
