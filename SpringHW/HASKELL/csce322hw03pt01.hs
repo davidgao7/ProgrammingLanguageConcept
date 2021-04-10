@@ -8,11 +8,11 @@ main = do
  args <- getArgs
  filename <- readFile (head args)
  (maze,moves) <- readGravityMazeFile filename
- print "original"
- printMaze maze
- print "moves"
- print (head moves)
- print "onePlayerOneRotation: "
+ -- print "original"
+ -- printMaze maze
+ -- print "moves"
+ -- print (head moves)
+ -- print "onePlayerOneRotation: "
  print "Result"
  printMaze (onePlayerOneRotation maze (head moves))
 
