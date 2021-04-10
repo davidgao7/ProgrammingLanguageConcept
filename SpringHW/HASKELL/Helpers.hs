@@ -266,6 +266,7 @@ where
  find2dMultiPlayersPostion maze x y
   | (x > (length(maze)-1))                                               = [] -- go through all maze
   | (isPlayer(maze !! x !! y))                                           = [[x]++[y]] ++ find2dMultiPlayersPostion maze x (y+1) -- find in col
+  | (isPlayer(maze !! x !! y))                                           = [[digitToInt (maze !! x !! y)]++[x]++[y]] ++ find2dMultiPlayersPostion maze x (y+1) -- find in col
   | (((x+1)<(length(maze)-1)) && ((y+1)>=(length(maze!!x)-1)))           = find2dMultiPlayersPostion maze (x+1) 0 -- find next row
   | ((not(isPlayer(maze !! x !! y))) && ((y+1) < (length(maze !! x)-1))) = find2dMultiPlayersPostion maze x (y+1) -- not find in col
   | otherwise                                                            = []
