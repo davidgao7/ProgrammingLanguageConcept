@@ -36,8 +36,10 @@ find1dPlayerPosition,
 find2dPlayerPostion,
 clockwiseMazewithoutPlayerIndexAsInput,
 -------------------------------------------------
-cclockwiseMazewithoutPlayerIndexAsInput
+cclockwiseMazewithoutPlayerIndexAsInput,
 -------------------------------------------------
+hasgoalLine,
+hasgoal
 )
 where
  import Prelude
@@ -229,7 +231,7 @@ where
  cclockwiseMazewithoutPlayerIndexAsInput :: [[Char]] -> [[Char]] -- WORK
  cclockwiseMazewithoutPlayerIndexAsInput maze = cclockwiseMazeResult maze ((find2dPlayerPostion maze 0)!!0) ((find2dPlayerPostion maze 0)!!1)
  -------------------------------------------------
- flipMazewithouIndexAsInput :: [[Char]] -> [[Char]] -- TODO: part01test12 没过
+ flipMazewithouIndexAsInput :: [[Char]] -> [[Char]] -- WORK
  flipMazewithouIndexAsInput maze = flipwiseMaze mazeAfterplayerMove 0
                                    where
                                     mazeAfterplayerMove = getPlayerMoveUpResult maze x y player
@@ -237,3 +239,13 @@ where
                                     y                   = (find2dPlayerPostion maze 0)!!1
                                     player              = maze !! x !! y
  -- flipMazewithouIndexAsInput maze = flipwiseMaze (getPlayerMoveUpResult maze ((find2dPlayerPostion maze 0)!!0) ((find2dPlayerPostion maze 0)!!1) maze!!((find2dPlayerPostion maze 0)!!0)!!((find2dPlayerPostion maze 0)!!1)) 0
+ -------------------------------------------------
+ hasgoalLine :: [Char] -> Bool -- WORK
+ hasgoalLine (h:rest)
+  | (h == 'g')   = True -- find goal
+  | (rest == []) = False -- exahaust list and no goal
+  | otherwise    = hasgoalLine rest
+
+ hasgoal :: [[Char]] -> Bool -- WORK
+ hasgoal [] = False
+ hasgoal (row:rest) = ((hasgoalLine row) || (hasgoal rest))
