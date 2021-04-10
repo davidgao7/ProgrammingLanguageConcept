@@ -40,7 +40,7 @@ cclockwiseMazewithoutPlayerIndexAsInput,
 -------------------------------------------------
 hasgoalLine,
 hasgoal,
-findPlayers
+findPlayers,
 )
 where
  import Prelude
@@ -251,7 +251,7 @@ where
  hasgoal [] = False
  hasgoal (row:rest) = ((hasgoalLine row) || (hasgoal rest))
  -------------------------------------------------
- findPlayers :: [[Char]] ->Int -> Int ->[Char -- WORK
+ findPlayers :: [[Char]] ->Int -> Int ->[Char] -- WORK
  findPlayers [] _ _ = []
  findPlayers maze x y
   | (x > (length(maze)-1))                                               = [] -- go through all maze
