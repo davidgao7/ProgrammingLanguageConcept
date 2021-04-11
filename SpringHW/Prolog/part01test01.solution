@@ -1,0 +1,10 @@
+rotations
+[cc,cc,cc,cc,c,180]
+maze
+[x,x,x,x,x]
+[x,-,-,-,x]
+[x,2,-,1,x]
+[x,-,3,g,x]
+[x,-,-,-,x]
+[x,x,x,x,x]
+false

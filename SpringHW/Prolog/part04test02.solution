@@ -1,0 +1,9 @@
+maze
+[x,x,x,x,x,x,x,x,x]
+[x,-,-,-,-,-,-,-,x]
+[x,-,3,x,-,-,-,g,x]
+[x,-,-,-,x,2,1,-,x]
+[x,x,x,x,x,x,x,x,x]
+paths
+[c,c]
+true

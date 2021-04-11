@@ -1,0 +1,14 @@
+maze
+[x,x,x,x,x]
+[x,-,-,-,x]
+[x,-,-,-,x]
+[x,x,-,1,x]
+[x,-,-,-,x]
+[x,g,-,-,x]
+[x,-,-,-,x]
+[x,x,x,x,x]
+paths
+[180,180,cc,cc]
+[c,cc,cc,cc]
+[cc,c,cc,cc]
+true
