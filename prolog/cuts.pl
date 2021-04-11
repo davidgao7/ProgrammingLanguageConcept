@@ -14,3 +14,9 @@ vowel(u).
     !,
     vowel(B),
     writeln((A,B)).
+% lowercase : statement
+% Uppercase: variable
+% :- implication
+% ,  And
+% ?- Query
+% ; next solution
