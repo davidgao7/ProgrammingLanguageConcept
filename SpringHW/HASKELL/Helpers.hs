@@ -41,8 +41,18 @@ cclockwiseMazewithoutPlayerIndexAsInput,
 hasgoalLine,
 hasgoal,
 findPlayers,
-find2dMultiPlayersPostion
+-------------------------------------------------
 find2dMultiPlayersPostion,
+multiPlayerMoveUp,
+multiPlayerMoveLeft,
+multiPlayerMoveRight,
+getMultiPlayerMoveLeftResult,
+getMultiPlayerMoveRightResult,
+getMultiPlayerMoveUpResult,
+intToChar,
+getMultiPlayerClockwise,
+getMultiPlayerCClockwise,
+getMultiPlayerFlipwise
 )
 where
  import Prelude
@@ -172,7 +182,7 @@ where
   | otherwise                 = [getcolumn maze (length(maze!!0)-(n+1))] ++ (cclockwiseMaze maze (n+1))
  -------------------------------------------------
  -- no need to consider player move (palyer already move)
- clockwiseMaze :: [[Char]] -> Int -> [[Char]] -- WORK
+ clockwiseMaze :: [[Char]] -> Int -> [[Char]] -- TODO: not performing correct
  clockwiseMaze mazeAfterplayerMove n -- n starts from 0
   | ((n+1) > length(mazeAfterplayerMove!!0)) = [] -- finish loop through all token in maze
   | otherwise                                = [(backward (getcolumn mazeAfterplayerMove n))] ++ (clockwiseMaze mazeAfterplayerMove (n+1))
@@ -275,9 +285,73 @@ where
  find2dMultiPlayersPostion [] _ _ = []
  find2dMultiPlayersPostion maze x y
   | (x > (length(maze)-1))                                               = [] -- go through all maze
-  | (isPlayer(maze !! x !! y))                                           = [[x]++[y]] ++ find2dMultiPlayersPostion maze x (y+1) -- find in col
+  -------------------------------------------------
   | (isPlayer(maze !! x !! y))                                           = [[digitToInt (maze !! x !! y)]++[x]++[y]] ++ find2dMultiPlayersPostion maze x (y+1) -- find in col
   | (((x+1)<(length(maze)-1)) && ((y+1)>=(length(maze!!x)-1)))           = find2dMultiPlayersPostion maze (x+1) 0 -- find next row
   | ((not(isPlayer(maze !! x !! y))) && ((y+1) < (length(maze !! x)-1))) = find2dMultiPlayersPostion maze x (y+1) -- not find in col
   | otherwise                                                            = []
+ -------------------------------------------------
+--  *Helpers> multiPlayerMoveUp ["xxxx", "x--x", "x12x", "xxxx"] [[1,2,1],[2,2,2]]
+-- ["xxxx","x12x","x--x","xxxx"]
+-- *Helpers>  multiPlayerMoveUp ["xxxx", "x3-x", "x12x", "xxxx"] [[1,2,1],[2,2,2],[3,1,1]]
+-- ["xxxx","x32x","x1-x","xxxx"]
+ multiPlayerMoveUp :: [[Char]] -> [[Int]] -> [[Char]] -- WORK
+ multiPlayerMoveUp [] _                              = []
+ multiPlayerMoveUp maze []                           = maze
+ multiPlayerMoveUp maze (playerXNameAndPostion:rest) = multiPlayerMoveUp mazeAfterOnePlayerMoveUp rest
+                                                       where
+                                                         mazeAfterOnePlayerMoveUp
+                                                          | (maze !! (playerX-1) !! playerY == 'x') || (isPlayer(maze !! (playerX-1) !! playerY)) = maze
+                                                          | otherwise                                                                             = clearPlayerPerviousPosition (moveUp maze playerX playerY playerName) playerX playerY
+                                                         playerName = intToChar(playerXNameAndPostion!!0)
+                                                         playerX    = playerXNameAndPostion!!1
+                                                         playerY    = playerXNameAndPostion!!2
+ -------------------------------------------------
+--  *Helpers> multiPlayerMoveLeft ["xxxx","x-1x","x-2x","xxxx"] [[1,1,2],[2,2,2]]
+-- ["xxxx","x1-x","x2-x","xxxx"]
+-- *Helpers> multiPlayerMoveLeft ["xxxx","x-1x","x2-x","xxxx"] [[1,1,2],[2,2,1]]
+-- ["xxxx","x1-x","x2-x","xxxx"]
+ multiPlayerMoveLeft :: [[Char]] -> [[Int]] -> [[Char]] -- WORK
+ multiPlayerMoveLeft [] _                              = []
+ multiPlayerMoveLeft maze []                           = maze
+ multiPlayerMoveLeft maze (playerXNameAndPostion:rest) = multiPlayerMoveLeft mazeAfterOnePlayerMoveLeft rest
+                                                         where
+                                                           mazeAfterOnePlayerMoveLeft
+                                                            | (maze !! playerX !! (playerY-1) == 'x') || (isPlayer(maze !! playerX !! (playerY-1))) = maze -- not move when other player or x in the way
+                                                            | otherwise                                                                             = mazeBeforeRotateMovePlayerLeft maze playerX playerY
+                                                           playerName      = intToChar(playerXNameAndPostion!!0)
+                                                           playerX         = playerXNameAndPostion!!1
+                                                           playerY         = playerXNameAndPostion!!2
+ -------------------------------------------------
+ multiPlayerMoveRight :: [[Char]] -> [[Int]] -> [[Char]] -- WORK
+ multiPlayerMoveRight [] _                              = []
+ multiPlayerMoveRight maze []                           = maze
+ multiPlayerMoveRight maze (playerXNameAndPostion:rest) = multiPlayerMoveRight mazeAfterOnePlayerMoveRight rest
+                                                          where
+                                                            mazeAfterOnePlayerMoveRight
+                                                             | ((maze !! playerX !! (playerY+1) == 'x') || (isPlayer(maze !! playerX !! (playerY+1)))) = maze
+                                                             | otherwise                                                                               = mazeBeforeRotateMovePlayerRight maze playerX playerY
+                                                            playerName      = intToChar(playerXNameAndPostion!!0)
+                                                            playerX         = playerXNameAndPostion!!1
+                                                            playerY         = playerXNameAndPostion!!2
+ -------------------------------------------------
+ getMultiPlayerMoveLeftResult :: [[Char]] -> [[Char]] -- WORK
+ getMultiPlayerMoveLeftResult maze = multiPlayerMoveLeft maze (find2dMultiPlayersPostion maze 0 0)
+ -------------------------------------------------
+ getMultiPlayerMoveRightResult :: [[Char]] -> [[Char]] -- TODO: check this before moving further
+ getMultiPlayerMoveRightResult maze = multiPlayerMoveRight maze (find2dMultiPlayersPostion maze 0 0)
+ -------------------------------------------------
+ getMultiPlayerMoveUpResult :: [[Char]] -> [[Char]] -- TODO: check this before moving further
+ getMultiPlayerMoveUpResult maze = multiPlayerMoveUp maze (find2dMultiPlayersPostion maze 0 0)
+ -------------------------------------------------
+ intToChar :: Int -> Char --WORK
+ intToChar m = (show m) !! 0
 -------------------------------------------------
+ getMultiPlayerClockwise :: [[Char]] -> [[Char]]
+ getMultiPlayerClockwise maze = clockwiseMaze (getMultiPlayerMoveRightResult maze) 0
+-------------------------------------------------
+ getMultiPlayerCClockwise :: [[Char]] -> [[Char]]
+ getMultiPlayerCClockwise maze = cclockwiseMaze (getMultiPlayerMoveLeftResult maze) 0
+-------------------------------------------------
+ getMultiPlayerFlipwise :: [[Char]] -> [[Char]]
+ getMultiPlayerFlipwise maze = flipwiseMaze (getMultiPlayerMoveUpResult maze) 0
