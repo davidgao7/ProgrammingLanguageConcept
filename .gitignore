@@ -1,3 +1,10 @@
 /out
 *.iml
 /.idea
+gen
+haskell/csce322a03part01.hs
+haskell/csce322a03part02.hs
+haskell/csce322a03part03.hs
+haskell/csce322a03part04.hs
+haskell/Helpers.hs
+haskell/part01test01.eps
