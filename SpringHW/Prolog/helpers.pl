@@ -27,3 +27,11 @@ printMazeGame([]).
 printMazeGame([Row|Rows]):-
     writeln(Row),
     printMazeGame(Rows).
+check1DPlayers([],0).% WORK
+check1DPlayers([E|Rest],Player):-
+	number(E), % WORK
+	check1DPlayers(Rest,TPlayer), % WORK
+	Player is TPlayer + 1.
+check1DPlayers([E|Rest],Player):-
+	\+ number(E), % WORK
+	check1DPlayers(Rest,Player).% WORK
