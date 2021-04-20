@@ -1,6 +1,7 @@
 :- module( helpers,
 	 [ readGravityMazeFile/3
 	 , printMazeGame/1
+	 [ readGravityMazeFile/3 % /3: number of arguments to the predicate
 	 check2DPlayers/2,
 	 check1DPlayers/2,
 	 check2dOddPlayers/1,
@@ -8,11 +9,15 @@
 	 checkOddRotation/1
 	 ]
     ).
+  ).
 
 prefix([_],[]).
 prefix([H|T],[H|P]):-%if
     prefix(T,P).
 
+% ? - readGravityMazeFile (" part01test01 . g " , Moves , Maze ) .
+% Moves = 1 d list
+% Maze = 2 d List
 readGravityMazeFile(File,Moves,Maze):-
     open(File,read,Input),
     read(Input,Moves),
@@ -61,5 +66,6 @@ checkOddRotation(Rotations):- % WORK
 	check1DRotation(Rotations,Result), % WORK
 	1 is Result mod 2. % WORK
 	% writeln(Rotations),
+checkOddRotation(Rotations):- %WORK
 	check1DRotation(Rotations,Result),
 	1 is Result mod 2.
