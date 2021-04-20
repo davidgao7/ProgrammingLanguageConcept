@@ -9,8 +9,9 @@ loadHelpers:-
     ['csce322hw04pt02'],
     ['csce322hw04pt03'],
     ['csce322hw04pt04'].
-    
+
 part01:-
+    loadHelpers,
     readGravityMazeFile('part01test01.g',Rotations,Maze),
     writeln(rotations),
     writeln(Rotations),
@@ -31,7 +32,7 @@ part03:-
     writeln(maze),
     printMazeGame(Maze),
     notStacked(Maze).
-    
+
 part04:-
     readGravityMazeFile('part04test02.g',_,Maze),
     writeln(maze),
@@ -39,4 +40,3 @@ part04:-
     setof(Moves,fewestRotationsMultiple(Maze,Moves),Paths),
     writeln(paths),
     printPaths(Paths).
-    

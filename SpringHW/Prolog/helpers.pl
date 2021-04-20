@@ -60,3 +60,6 @@ check1DRotation([_|Rest],Result):- % WORK
 checkOddRotation(Rotations):- % WORK
 	check1DRotation(Rotations,Result), % WORK
 	1 is Result mod 2. % WORK
+	% writeln(Rotations),
+	check1DRotation(Rotations,Result),
+	1 is Result mod 2.
