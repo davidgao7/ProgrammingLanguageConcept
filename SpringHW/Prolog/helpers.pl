@@ -35,3 +35,8 @@ check1DPlayers([E|Rest],Player):-
 check1DPlayers([E|Rest],Player):-
 	\+ number(E), % WORK
 	check1DPlayers(Rest,Player).% WORK
+check2DPlayers([],0). % WORK
+check2DPlayers([Row|Rest],Players):-
+	check1DPlayers(Row,D1Player), % WORK
+	check2DPlayers(Rest,SubPlayers), % WORK
+	Players is SubPlayers + D1Player. % WORK
