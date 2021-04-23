@@ -116,3 +116,14 @@ moveUp(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):- % not x not player not 
 	not(isGoal(UpLocation)), %not meet goal
 	moveUp(Maze,X,PlayerY,FinalPlayerX,FinalPlayerY).%keep moving up,! cut to prevent backtracking, there will have only 1 outcome out
 
+moveLeft(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):-% no x block , no player block, left is goal
+	PlayerY - 1 > 0,
+	Y is PlayerY - 1,
+	nth0(PlayerX, Maze, PlayerRow),
+	nth0(Y, PlayerRow, LeftLocation),
+	LeftLocation \= x,
+	not(isPlayer(LeftLocation)),
+	isGoal(LeftLocation),
+	FinalPlayerX is PlayerX,
+	FinalPlayerY is Y.
+
