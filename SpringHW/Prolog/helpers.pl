@@ -137,3 +137,14 @@ moveLeft(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):-% x case, stop move le
 	FinalPlayerX is PlayerX,
 	FinalPlayerY is PlayerY.
 
+moveLeft(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):-% other player case, stop move left, return final position
+	PlayerY - 1 > 0,
+	Y is PlayerY - 1,
+	nth0(PlayerX, Maze, PlayerRow),
+	nth0(Y, PlayerRow, LeftLocation),
+	LeftLocation \= x,
+	not(isGoal(LeftLocation)),
+	LeftLocation \= (-),
+	FinalPlayerX is PlayerX,
+	FinalPlayerY is PlayerY.
+
