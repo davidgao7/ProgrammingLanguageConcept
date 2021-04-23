@@ -9,6 +9,7 @@
 	 checkMove/2,
 	 findPlayer/3,
 	 moveUp/5,
+	 moveLeft/5,
 	 ]
 ).
 readGravityMazeFile(File,Moves,Maze):-
@@ -126,4 +127,13 @@ moveLeft(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):-% no x block , no play
 	isGoal(LeftLocation),
 	FinalPlayerX is PlayerX,
 	FinalPlayerY is Y.
+
+moveLeft(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):-% x case, stop move left,return final position
+	PlayerY - 1 > 0,
+	Y is PlayerY - 1,
+	nth0(PlayerX, Maze, PlayerRow),
+	nth0(Y, PlayerRow, LeftLocation),
+	LeftLocation = x,
+	FinalPlayerX is PlayerX,
+	FinalPlayerY is PlayerY.
 
