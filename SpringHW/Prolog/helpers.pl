@@ -10,6 +10,7 @@
 	 findPlayer/3,
 	 moveUp/5,
 	 moveLeft/5,
+	 inArray/3
 	 ]
 ).
 readGravityMazeFile(File,Moves,Maze):-
@@ -147,4 +148,23 @@ moveLeft(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):-% other player case, s
 	LeftLocation \= (-),
 	FinalPlayerX is PlayerX,
 	FinalPlayerY is PlayerY.
+
+inArray(Player,[X,Y],[PlrAndIndex|_]):- %check player with its index is in found Plr array WORK
+	nth0(0,PlrAndIndex,Plr),
+	nth0(1,PlrAndIndex,FX),
+	nth0(2,PlrAndIndex,FY),
+	Player = Plr,
+	X = FX,
+	Y = FY.
+inArray(Plr,_,[PlrAndIndex|_]):-
+	nth0(0,PlrAndIndex,Player),
+	Plr = Player.
+inArray(_,[X,_],[PlrAndIndex|Rest]):-
+	nth0(1,PlrAndIndex,FX),
+	X \= FX,
+	inArray(_,[X,_],Rest).
+inArray(_,[_,Y],[PlrAndIndex|Rest]):-
+	nth0(2,PlrAndIndex,FY),
+	Y \= FY,
+	inArray(_,[_,Y],Rest).
 
