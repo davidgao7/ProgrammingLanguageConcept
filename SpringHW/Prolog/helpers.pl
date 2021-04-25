@@ -11,6 +11,7 @@
 	 moveUp/5,
 	 moveLeft/5,
 	 inArray/3
+	 replace1dAtIndex/4,
 	 ]
 ).
 readGravityMazeFile(File,Moves,Maze):-
@@ -96,6 +97,13 @@ moveUp(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):- %STOP CASE 2: x case, s
 	UpLocation = x, % upper is x, cannot move, stay
 	FinalPlayerX is PlayerX,
 	FinalPlayerY is PlayerY. % stop backtracking, return final position
+replace1dAtIndex([],_,E,[E]). %WORK
+replace1dAtIndex([_|Rest],0,E,[E|Rest]). %WORK
+replace1dAtIndex([H|Rest],Idx,E,Result):- %replace1dAtIndex([1,2,3,4],1,5,[],Result)
+	Idx \= 0,
+	Idxx is Idx - 1,
+	append([H],SubList,Result),
+	replace1dAtIndex(Rest,Idxx,E,SubList).
 
 moveUp(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):- %STOP CASE 3: other player case, stop move up, return final position
 	PlayerX - 1 >= 0,
