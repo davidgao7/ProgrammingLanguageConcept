@@ -15,6 +15,10 @@
 	 replace2dAtIndex/5,
 	 takeN/3,
 	 dropN/3,
+	 clockwiseIndex/5,
+	 cclockwiseIndex/5,
+	 flipwiseIndex/5,
+	 createEmptyMaze/3
 	 ]
 ).
 readGravityMazeFile(File,Moves,Maze):-
@@ -100,6 +104,22 @@ moveUp(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):- %STOP CASE 2: x case, s
 	UpLocation = x, % upper is x, cannot move, stay
 	FinalPlayerX is PlayerX,
 	FinalPlayerY is PlayerY. % stop backtracking, return final position
+%======================================
+takeN(0,_,[]).
+takeN(_,[],[]).
+takeN(1,[E|_],[E]).
+takeN(N,Before,Result):- %WORK
+	dropN(N,Before,After),
+	subtract(Before,After,Result).
+%======================================
+dropN(0,Before,Before).
+dropN(_,[],[]).
+dropN(N,[_|TB],TA):- %WORK
+	length(_,N),
+	N > 0,
+	NM1 is N - 1,
+	dropN(NM1,TB, TA).
+%======================================
 replace1dAtIndex([],_,E,[E]). %WORK
 replace1dAtIndex([_|Rest],0,E,[E|Rest]). %WORK
 replace1dAtIndex([H|Rest],Idx,E,Result):- %replace1dAtIndex([1,2,3,4],1,5,[],Result)
@@ -136,6 +156,11 @@ takeN(1,[E|_],[E]).
 takeN(N,Before,Result):- %WORK
 	dropN(N,Before,After),
 	subtract(Before,After,Result).
+createEmptyMaze(R,C,Maze):- %WORK
+	length(Row,C),
+	maplist(=(-),Row),
+	length(Maze,R),
+	maplist(=(Row),Maze).
 
 dropN(0,Before,Before).
 dropN(_,[],[]).
@@ -144,6 +169,22 @@ dropN(N,[_|TB],TA):- %WORK
 	N > 0,
 	NM1 is N - 1,
 	dropN(NM1,TB, TA).
+clockwiseIndex(Maze,X,Y,NewX,NewY):- %rotate x,-,g WORK
+	nth0(X,Maze,Row),
+	nth0(Y,Row,E),
+	not(isPlayer(E)),
+	length(Maze,M),
+	MazeL is M-1,
+	NewY is MazeL - X,
+	NewX is Y.
+
+cclockwiseIndex(Maze,X,Y,NewX,NewY):- %rotate x,-,g WORK
+	nth0(X,Maze,Row),
+	nth0(Y,Row,E),
+	not(isPlayer(E)),
+	length(Row,RowLen),
+	NewX is RowLen - 1 - Y,
+	NewY is X.
 
 moveUp(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):- % not x not player not goal, keep move up
 	PlayerX - 1 >= 0,
@@ -204,4 +245,12 @@ inArray(_,[_,Y],[PlrAndIndex|Rest]):-
 	nth0(2,PlrAndIndex,FY),
 	Y \= FY,
 	inArray(_,[_,Y],Rest).
+flipwiseIndex(Maze,X,Y,NewX,NewY):- %WORK
+	nth0(X,Maze,Row),
+	nth0(Y,Row,E),
+	not(isPlayer(E)),
+	length(Row,ColLen),
+	length(Maze,RowLen),
+	NewX is RowLen - 1 - X,
+	NewY is ColLen - 1 - Y.
 
