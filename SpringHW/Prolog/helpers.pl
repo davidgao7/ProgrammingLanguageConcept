@@ -12,6 +12,9 @@
 	 moveLeft/5,
 	 inArray/3
 	 replace1dAtIndex/4,
+	 replace2dAtIndex/5,
+	 takeN/3,
+	 dropN/3,
 	 ]
 ).
 readGravityMazeFile(File,Moves,Maze):-
@@ -115,6 +118,32 @@ moveUp(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):- %STOP CASE 3: other pla
 	UpLocation \= (-), % not '-'
 	FinalPlayerX is PlayerX,
 	FinalPlayerY is PlayerY. % stop backtracking, return final position
+	replace1dAtIndex(Rest,Idxx,E,SubList). % WORK
+
+replace2dAtIndex([],_,_,E,[E]).
+replace2dAtIndex(Maze,R,C,E,Result):- %WORK
+	nth0(R,Maze,Row),
+	replace1dAtIndex(Row,C,E,NewRow),
+	takeN(R,Maze,Head),
+	Rest is R + 1,
+	dropN(Rest,Maze,Tail),
+	append(Head,[NewRow],FirstHalf),
+	append(FirstHalf,Tail,Result).
+
+takeN(0,_,[]).
+takeN(_,[],[]).
+takeN(1,[E|_],[E]).
+takeN(N,Before,Result):- %WORK
+	dropN(N,Before,After),
+	subtract(Before,After,Result).
+
+dropN(0,Before,Before).
+dropN(_,[],[]).
+dropN(N,[_|TB],TA):- %WORK
+	length(_,N),
+	N > 0,
+	NM1 is N - 1,
+	dropN(NM1,TB, TA).
 
 moveUp(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):- % not x not player not goal, keep move up
 	PlayerX - 1 >= 0,
