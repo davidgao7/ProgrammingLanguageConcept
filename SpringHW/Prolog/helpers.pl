@@ -126,8 +126,8 @@ replace2dAtIndex(Maze,R,C,E,Result):- %WORK
 	nth0(R,Maze,Row),
 	replace1dAtIndex(Row,C,E,NewRow),
 	takeN(R,Maze,Head),
-	Rest is R + 1,
-	dropN(Rest,Maze,Tail),
+	Drop is R + 1,
+	dropN(Drop,Maze,Tail),
 	append(Head,[NewRow],FirstHalf),
 	append(FirstHalf,Tail,Result).
 %======================================
@@ -174,7 +174,7 @@ moveUp(Maze,PlayerX,PlayerY,Player,Result):-%STOP CASE 1: no x block, no player 
 	FinalPlayerX is X,
 	FinalPlayerY is PlayerY,
 	replace2dAtIndex(Maze,FinalPlayerX,FinalPlayerY,Player,Result),
-	replace2dAtIndex(Result,PlayerX,PlayerY,-,FinalResult).
+	replace2dAtIndex(Result,PlayerX,PlayerY,(-),FinalResult).
 %======================================
 moveUp(Maze,PlayerX,PlayerY,Player,Result):- %STOP CASE 2: x case, stop move up, return final position
 	PlayerX - 1 >= 0,
