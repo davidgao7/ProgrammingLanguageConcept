@@ -116,7 +116,12 @@ replace2dAtIndex(Maze,R,C,E,Result):- %WORK
 	nth0(R,Maze,Row),
 	nth0(C,Row,Ele),
 	Ele = E,
-	Result = Maze.
+	Result = Maze,!.
+replace2dAtIndex(Maze,R,C,-,Result):- %WORK
+	nth0(R,Maze,Row),
+	nth0(C,Row,Ele),
+	Ele = (-),
+	Result = Maze,!.
 replace2dAtIndex(Maze,R,C,E,Result):- %WORK
 	nth0(R,Maze,Row),
 	replace1dAtIndex(Row,C,E,NewRow),
@@ -168,7 +173,8 @@ moveUp(Maze,PlayerX,PlayerY,Player,Result):-%STOP CASE 1: no x block, no player 
 	isGoal(UpLocation),
 	FinalPlayerX is X,
 	FinalPlayerY is PlayerY,
-	replace2dAtIndex(Maze,FinalPlayerX,FinalPlayerY,Player,Result).
+	replace2dAtIndex(Maze,FinalPlayerX,FinalPlayerY,Player,Result),
+	replace2dAtIndex(Result,PlayerX,PlayerY,-,FinalResult).
 %======================================
 moveUp(Maze,PlayerX,PlayerY,Player,Result):- %STOP CASE 2: x case, stop move up, return final position
 	PlayerX - 1 >= 0,
@@ -178,7 +184,8 @@ moveUp(Maze,PlayerX,PlayerY,Player,Result):- %STOP CASE 2: x case, stop move up,
 	UpLocation = x, % upper is x, cannot move, stay
 	FinalPlayerX is PlayerX,
 	FinalPlayerY is PlayerY, % stop backtracking, return final position
-	replace2dAtIndex(Maze,FinalPlayerX,FinalPlayerY,Player,Result).
+	replace2dAtIndex(Maze,FinalPlayerX,FinalPlayerY,Player,Result),
+	replace2dAtIndex(Result,PlayerX,PlayerY,-,FinalResult).
 %======================================
 moveUp(Maze,PlayerX,PlayerY,Player,Result):- %STOP CASE 3: other player case, stop move up, return final position
 	PlayerX - 1 >= 0,
@@ -189,8 +196,9 @@ moveUp(Maze,PlayerX,PlayerY,Player,Result):- %STOP CASE 3: other player case, st
 	not(isGoal(UpLocation)), % not goal
 	UpLocation \= (-), % not '-'
 	FinalPlayerX is PlayerX,
-	FinalPlayerY is PlayerY. % stop backtracking, return final position
-	replace2dAtIndex(Maze,FinalPlayerX,FinalPlayerY,Player,Result).
+	FinalPlayerY is PlayerY, % stop backtracking, return final position
+	replace2dAtIndex(Maze,FinalPlayerX,FinalPlayerY,Player,Result),
+	replace2dAtIndex(Result,PlayerX,PlayerY,-,FinalResult).
 %======================================
 moveUp(Maze,PlayerX,PlayerY,Player,Result):- % not x not player not goal, keep move up
 	PlayerX - 1 >= 0,
