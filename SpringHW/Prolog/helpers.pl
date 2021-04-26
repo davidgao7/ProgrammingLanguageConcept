@@ -210,7 +210,7 @@ moveUp(Maze,PlayerX,PlayerY,Player,Result):- % not x not player not goal, keep m
 	not(isGoal(UpLocation)), %not meet goal
 	moveUp(Maze,X,PlayerY,Player,Result).%keep moving up,! cut to prevent backtracking, there will have only 1 outcome out
 %======================================
-moveLeft(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):-% no x block , no player block, left is goal
+moveLeft(Maze,PlayerX,PlayerY,Player,Result):-% no x block , no player block, left is goal
 	PlayerY - 1 > 0,
 	Y is PlayerY - 1,
 	nth0(PlayerX, Maze, PlayerRow),
@@ -219,16 +219,20 @@ moveLeft(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):-% no x block , no play
 	not(isPlayer(LeftLocation)),
 	isGoal(LeftLocation),
 	FinalPlayerX is PlayerX,
-	FinalPlayerY is Y.
+	FinalPlayerY is Y,
+	replace2dAtIndex(Maze,FinalPlayerX,FinalPlayerY,Player,Result),
+	replace2dAtIndex(Result,PlayerX,PlayerY,-,FinalResult).
 %======================================
-moveLeft(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):-% x case, stop move left,return final position
+moveLeft(Maze,PlayerX,PlayerY,Player,Result):-% x case, stop move left,return final position
 	PlayerY - 1 > 0,
 	Y is PlayerY - 1,
 	nth0(PlayerX, Maze, PlayerRow),
 	nth0(Y, PlayerRow, LeftLocation),
 	LeftLocation = x,
 	FinalPlayerX is PlayerX,
-	FinalPlayerY is PlayerY.
+	FinalPlayerY is PlayerY,
+	replace2dAtIndex(Maze,FinalPlayerX,FinalPlayerY,Player,Result),
+	replace2dAtIndex(Result,PlayerX,PlayerY,-,FinalResult).
 %======================================
 moveLeft(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):-% other player case, stop move left, return final position
 	PlayerY - 1 > 0,
@@ -239,7 +243,9 @@ moveLeft(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):-% other player case, s
 	not(isGoal(LeftLocation)),
 	LeftLocation \= (-),
 	FinalPlayerX is PlayerX,
-	FinalPlayerY is PlayerY.
+	FinalPlayerY is PlayerY,
+	replace2dAtIndex(Maze,FinalPlayerX,FinalPlayerY,Player,Result),
+	replace2dAtIndex(Result,PlayerX,PlayerY,-,FinalResult).
 %======================================
 moveLeft(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):-% not x not player not goal, keep move left
 	PlayerY - 1 > 0,
@@ -265,7 +271,9 @@ moveRight(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):-
 	not(isPlayer(RightLocation)),
 	isGoal(RightLocation),% no x block, no player block, right is goal
 	FinalPlayerX is PlayerX,
-	FinalPlayerY is Y.
+	FinalPlayerY is Y,
+	replace2dAtIndex(Maze,FinalPlayerX,FinalPlayerY,Player,Result),
+	replace2dAtIndex(Result,PlayerX,PlayerY,-,FinalResult).
 %======================================
 moveRight(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):- % x case, stop move right, return final position
 	nth0(0,Maze,Row),
@@ -276,7 +284,9 @@ moveRight(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):- % x case, stop move 
 	nth0(Y, PlayerRow, RightLocation),
 	RightLocation = x,
 	FinalPlayerX is PlayerX,
-	FinalPlayerY is PlayerY.
+	FinalPlayerY is PlayerY,
+	replace2dAtIndex(Maze,FinalPlayerX,FinalPlayerY,Player,Result),
+	replace2dAtIndex(Result,PlayerX,PlayerY,-,FinalResult).
 %======================================
 moveRight(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):- % other player case, stop move right, return final position
 	nth0(0,Maze,Row),
@@ -289,7 +299,9 @@ moveRight(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):- % other player case,
 	not(isGoal(RightLocation)),
 	RightLocation \= (-),
 	FinalPlayerX is PlayerX,
-	FinalPlayerY is PlayerY.
+	FinalPlayerY is Player,
+	replace2dAtIndex(Maze,FinalPlayerX,FinalPlayerY,Player,Result),
+	replace2dAtIndex(Result,PlayerX,PlayerY,-,FinalResult).
 %======================================
 moveRight(Maze,PlayerX,PlayerY,FinalPlayerX,FinalPlayerY):- % not x not player not goal , keep moving right
 	nth0(0,Maze,Row),
