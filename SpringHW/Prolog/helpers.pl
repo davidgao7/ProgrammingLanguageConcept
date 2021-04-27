@@ -344,6 +344,7 @@ findPlayer(Maze, X, Y,PlayerArray):-
 	nth0(X,Maze,Row),
 	nth0(Y,Row,Col),
 	isPlayer(Col),!,
+	Result = NewplayerArray,
 	not(inArray(Col,[X,Y],PlayerArray)),!,
 	append(PlayerArray,[[Col,X,Y]],NewplayerArray),
 	length(Row,M),
@@ -366,6 +367,7 @@ findPlayer(Maze, X, Y,PlayerArray):-
 	X < RowLen, % next Row
 	Xnext is X+1,
 	findPlayer(Maze, Xnext, 0,NewplayerArray).
+	Result = NewplayerArray,
 %======================================
 findPlayer(Maze, X, Y,PlayerArray):-
 	nth0(X,Maze,Row),
@@ -394,6 +396,7 @@ findPlayer(Maze, X, Y,PlayerArray):-
 	X < ColLen,
 	Ynext is Y+1,
 	findPlayer(Maze,X,Ynext,PlayerArray).
+	Result = PlayerArray,
 %======================================
 findPlayer(Maze, X, Y,PlayerArray):-
 	nth0(X,Maze,Row),
@@ -404,6 +407,7 @@ findPlayer(Maze, X, Y,PlayerArray):-
 	Y + 1 >= RowIndex,
 	Xnext is X+1,
 	findPlayer(Maze,Xnext,0,PlayerArray).
+	Result = PlayerArray,
 %======================================
 findPlayer(Maze, X, _,_):-
 	length(Maze,M),
