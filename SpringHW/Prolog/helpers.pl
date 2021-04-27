@@ -398,16 +398,17 @@ findPlayer(Maze, X, Y,PlayerArray,Result):-
 	Result = PlayerArray, %WORK
 	findPlayer(Maze,X,Ynext,PlayerArray,Result).%WORK
 %======================================
-findPlayer(Maze, X, Y,PlayerArray):-
+findPlayer(Maze, X, Y,PlayerArray,Result):-
 	nth0(X,Maze,Row),
 	nth0(Y,Row,Col),
 	not(isPlayer(Col)),!,
 	length(Row,M),
 	RowIndex is M-1,
-	Y + 1 >= RowIndex,
+	Y >= RowIndex,
 	Xnext is X+1,
-	findPlayer(Maze,Xnext,0,PlayerArray).
+	%==============
 	Result = PlayerArray,
+	findPlayer(Maze,Xnext,0,PlayerArray,Result).
 %======================================
 findPlayer(Maze, X, _,_):-
 	length(Maze,M),
