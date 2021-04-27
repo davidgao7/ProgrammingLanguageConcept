@@ -383,20 +383,20 @@ findPlayer(Maze, X, Y,PlayerArray):-
 	Xnext is X+1,
 	findPlayer(Maze, Xnext, 0,NewplayerArray).
 %======================================
-findPlayer(Maze, X, Y,PlayerArray):-
-	nth0(X,Maze,Row),
-	nth0(Y,Row,Col),
-	not(isPlayer(Col)),!,
-	length(Row,M),
-	length(Maze,N),
-	RowLen is M-1,
-	ColLen is N-1,
-	RowIndex is RowLen,
-	Y < RowIndex,
-	X < ColLen,
-	Ynext is Y+1,
-	findPlayer(Maze,X,Ynext,PlayerArray).
-	Result = PlayerArray,
+findPlayer(Maze, X, Y,PlayerArray,Result):-
+	nth0(X,Maze,Row), %WORK
+	nth0(Y,Row,Col), %WORK
+	not(isPlayer(Col)),!, %WORK
+	length(Row,M), %WORK
+	length(Maze,N), %WORK
+	RowLen is M-1, %WORK
+	ColLen is N-1, %WORK
+	RowIndex is RowLen, %WORK
+	Y < RowIndex, %WORK
+	X < ColLen, %WORK
+	Ynext is Y+1, %WORK
+	Result = PlayerArray, %WORK
+	findPlayer(Maze,X,Ynext,PlayerArray,Result).%WORK
 %======================================
 findPlayer(Maze, X, Y,PlayerArray):-
 	nth0(X,Maze,Row),
