@@ -93,6 +93,11 @@ takeN(1,[E|_],[E]).
 takeN(N,Before,Result):- %WORK
 	dropN(N,Before,After),
 	subtract(Before,After,Result).
+takeN(0,_,[]):-!.
+takeN(N,[H|Rest],[H|T]):-
+	N > 0,
+	NM1 is N - 1,
+	takeN(NM1, Rest, T).
 %======================================
 dropN(0,Before,Before).
 dropN(_,[],[]).
