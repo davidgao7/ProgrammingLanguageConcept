@@ -86,12 +86,16 @@ isPlayer(7).
 isPlayer(8).
 isPlayer(9).
 %======================================
+% Professor: Save the H to the front of the third argument of takeN,
+% then fill in the tail of the third argument from the recursive call.
 %======================================
-takeN(0,_,[]):-!.
-takeN(N,[H|Rest],[H|T]):-
+takeN(0,_,[]).
+takeN(_,[],[]).
+takeN(1,[E|_],[E]).
+takeN(N,[H|Rest],[H|Result]):-
 	N > 0,
 	NM1 is N - 1,
-	takeN(NM1, Rest, T).
+	takeN(NM1, Rest, Result).
 %======================================
 dropN(0,Before,Before).
 dropN(_,[],[]).
