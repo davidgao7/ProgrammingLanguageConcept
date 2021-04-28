@@ -362,7 +362,6 @@ findPlayer2d([Row|Rest],E,X,Y):-
 	nth0(X,Maze,Row),
 	nth0(Y,Row,Col),
 %======================================
-findPlayer(Maze, X, Y,PlayerArray):-
 	nth0(X,Maze,Row),
 	nth0(Y,Row,Col),
 %======================================
