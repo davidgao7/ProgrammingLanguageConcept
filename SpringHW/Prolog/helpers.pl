@@ -18,8 +18,9 @@
 	 moveUp/5,
 	 moveLeft/5,
 	 moveRight/5,
-	 findPlayer/4,
 	 inArray/3
+	 findPlayer1d/3,
+	 findPlayer2d/4,
 	 ]
 ).
 readGravityMazeFile(File,Moves,Maze):-
@@ -342,80 +343,31 @@ inArray(_,[_,Y],[PlrAndIndex|Rest]):-
 	Y \= FY,
 	inArray(_,[_,Y],Rest).
 %======================================
-findPlayer([],_,_,[]):-!.
+findPlayer1d([E|_],E,0). %WORK
+findPlayer1d([_|Rest],E,Idx):-
+	findPlayer1d(Rest,E,I),
+	Idx is I + 1.
+%======================================
+findPlayer2d([Row|Rest],E,0,Y):-
+	findPlayer1d(Row,E,Yn),
+	Y = Yn.
+findPlayer2d([Row|Rest],E,X,Y):-
+	not(findPlayer1d(Row,E,Y)),
+	length([Row|Rest],Xlen),
+	XX  = Xlen - 1,
+	X < XX,
+	Xnext is X + 1,
+	findPlayer2d(Rest,E,Xnext,Y).
+%======================================
+	nth0(X,Maze,Row),
+	nth0(Y,Row,Col),
+%======================================
 findPlayer(Maze, X, Y,PlayerArray):-
 	nth0(X,Maze,Row),
 	nth0(Y,Row,Col),
-	isPlayer(Col),!,
-	Result = NewplayerArray,
-	not(inArray(Col,[X,Y],PlayerArray)),!,
-	append(PlayerArray,[[Col,X,Y]],NewplayerArray),
+%======================================
+	nth0(X,Maze,Row),
+	nth0(Y,Row,Col),
 	length(Row,M),
-	ColLen is  M-1,
-	Y < ColLen,
-	Ynext is Y + 1,
-	findPlayer(Maze,X,Ynext,NewplayerArray).
 %======================================
-findPlayer(Maze, X, Y,PlayerArray):-
-	nth0(X,Maze,Row),
-	nth0(Y,Row,Col),
-	isPlayer(Col),!,
-	not(inArray(Col,[X,Y],PlayerArray)),!,
-	append(PlayerArray,[[Col,X,Y]],NewplayerArray),
 	length(Maze,M),
-	length(Row,N),
-	RowLen is  M-1,
-	ColLen is N-1,
-	Y > ColLen,
-	X < RowLen, % next Row
-	Xnext is X+1,
-	findPlayer(Maze, Xnext, 0,NewplayerArray).
-	Result = NewplayerArray,
-%======================================
-findPlayer(Maze, X, Y,PlayerArray):-
-	nth0(X,Maze,Row),
-	nth0(Y,Row,Col),
-	isPlayer(Col),!,
-	inArray(Col,[X,Y],PlayerArray),!,
-	length(Maze,M),
-	length(Row,N),
-	RowLen is  M-1,
-	ColLen is N-1,
-	Y > ColLen,
-	X < RowLen,
-	Xnext is X+1,
-	findPlayer(Maze, Xnext, 0,NewplayerArray).
-%======================================
-findPlayer(Maze, X, Y,PlayerArray,Result):-
-	nth0(X,Maze,Row), %WORK
-	nth0(Y,Row,Col), %WORK
-	not(isPlayer(Col)),!, %WORK
-	length(Row,M), %WORK
-	length(Maze,N), %WORK
-	RowLen is M-1, %WORK
-	ColLen is N-1, %WORK
-	RowIndex is RowLen, %WORK
-	Y < RowIndex, %WORK
-	X < ColLen, %WORK
-	Ynext is Y+1, %WORK
-	Result = PlayerArray, %WORK
-	findPlayer(Maze,X,Ynext,PlayerArray,Result).%WORK
-%======================================
-findPlayer(Maze, X, Y,PlayerArray,Result):-
-	nth0(X,Maze,Row),
-	nth0(Y,Row,Col),
-	not(isPlayer(Col)),!,
-	length(Row,M),
-	RowIndex is M-1,
-	Y >= RowIndex,
-	Xnext is X+1,
-	%==============
-	Result = PlayerArray,
-	findPlayer(Maze,Xnext,0,PlayerArray,Result).
-%======================================
-findPlayer(Maze, X, _,_):-
-	length(Maze,M),
-	MazeLength is M - 1,
-	X > MazeLength,
-	false.
-%======================================
