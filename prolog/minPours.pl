@@ -1,6 +1,9 @@
 % A, B, and C are capacities of three jugs, A is assumed to be full, while B and C are empty
 % Target is the quantity that you want remaining in one of the jugs
 % Pours is the sequence of pours that will get you from the start state to the target
+%The edges are pours. Since edges take you between nodes,
+%the nodes are the state of the system (contents of all three jugs).
+
 minPours((A,B,C),Target,Pours):-
     between(0,A,Target), % Target must be a non-negative value no larger than the capacity of A
     length(Pours,MinPoursLength),
