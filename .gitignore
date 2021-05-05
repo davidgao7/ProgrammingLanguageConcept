@@ -1,6 +1,7 @@
 /out
 *.iml
 /.idea
+/.vscode
 gen
 haskell/csce322a03part01.hs
 haskell/csce322a03part02.hs
