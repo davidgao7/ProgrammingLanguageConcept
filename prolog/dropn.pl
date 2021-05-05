@@ -1,4 +1,4 @@
-
+% drop first n element in List
 % dropn(N,ListBefore,ListAfter)
 dropN(0,ListBefore,ListBefore).
 dropN(_,[],[]).
