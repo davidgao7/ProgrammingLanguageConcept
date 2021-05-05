@@ -10,8 +10,8 @@ vowel(u).
     writeln((A,B)).
 
     myStatementWithCut:-
-    vowel(A),
-    !,
+    vowel(A), % before cut, doesn't not have alternate solution
+    !,% A won't go to find other solution next line(won't print)
     vowel(B),
     writeln((A,B)).
 % lowercase : statement
