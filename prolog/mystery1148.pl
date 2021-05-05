@@ -6,7 +6,7 @@ num(1).
 
 mystery(In, Out):-
   num(Number),
-  !,
+  !, %if fail cannot backtrack to find alternate solution
   helper(In,Number,Out).
 
 helper(A,N,B):-
@@ -14,7 +14,7 @@ helper(A,N,B):-
   length(A,LA),
   LA < N,%keep redo and incresing size of list A
   A = B,% is string list less than 4, return itself
-  !.
+  !. % if the first rule succeed, use it and don't try the second rule
 
 helper(A,N,B):-
   num(N),
