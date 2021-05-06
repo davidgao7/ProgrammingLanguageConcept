@@ -61,9 +61,9 @@ vowel(u).
     % true.
 
     myStatementWithCut:-
-    vowel(A), % before cut,doesn't not have alternate solution(A doesn't change)
-    !,% A won't go to find other solution next line(won't print)
-    vowel(B),
+    vowel(A), % anything before cut,doesn't not have alternate solution(A doesn't change)
+    !,% A won't find other solution
+    vowel(B),% will find alternate solution
     writeln((A,B)).
     % ?- myStatementWithCut.
     % a,a
