@@ -227,6 +227,15 @@ moveDown(Maze,PlayerX,PlayerY,Player,FinalResult):-
 	replace2dAtIndex(Result1,X,PlayerY,Player,CurrentMaze),
 	moveDown(CurrentMaze,X,PlayerY,Player,FinalResult).
 %======================================
+moveDown(Maze,PlayerX,PlayerY,Player,FinalResult):-
+	length(Maze,L),
+	PlayerX + 1 < L,
+	X is PlayerX + 1,
+	nth0(X, Maze, NextRow),
+	nth0(PlayerY, NextRow, DownLocation),
+	DownLocation = x,
+	FinalResult = Maze.
+%======================================
 moveLeft(Maze,PlayerX,PlayerY,_,FinalResult):-
 	PlayerY - 1 >= 0,
 	Y is PlayerY - 1,
@@ -378,10 +387,10 @@ mazeafterPlayerflipwise(Maze,X,Y,NewMaze):-
 	nth0(Y,PlayerRow,Player),
 	moveUp(Maze,PlayerX,PlayerY,Player,NewMaze).
 %======================================
-path(CurrentMaze,Count,[Path]):- %goal has been reached
+path(CurrentMaze,Count,[]):- %goal has been reached
 	between(0,7,Count),
 	not(findPlayer2d(CurrentMaze,g,_,_)).%WORK
-path(CurrentMaze,Count,[c|Path]):-
+path(CurrentMaze,Count,[c|Path]):- %TODO: do not use nested list, use <append> for simplicity (Professor use transpose for rotation)
 	between(1,6,L),
 	length(Path,L),
 	findPlayer2d(CurrentMaze,g,_,_),
